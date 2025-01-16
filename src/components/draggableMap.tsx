@@ -247,8 +247,23 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const startX = offset.x + scaledWidth * startPoint.x;
     const startY = offset.y + scaledHeight * startPoint.y;
     ctx.beginPath();
+    ctx.arc(startX, startY, 24, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(startX, startY, 18, 0, Math.PI * 2);
+    ctx.fillStyle = '#009a43';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(startX, startY, 16, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    ctx.beginPath();
     ctx.arc(startX, startY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#4CAF50';
+    ctx.fillStyle = '#009a43';
     ctx.fill();
 
     // Draw location points
@@ -257,17 +272,76 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       const y = offset.y + scaledHeight * point.y;
 
       ctx.beginPath();
-      ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#0000ff';
+      ctx.arc(x, y, 24, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
 
-      ctx.font = '14px Arial';
-      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.fillStyle = '#000000';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(x, y, 16, 0, Math.PI * 2);
+      ctx.fillStyle = point.color || '#FFFFFF';
+      ctx.fill();
+
+      // Draw inner black circle
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#000000';
+      ctx.fill();
+
+      // Draw label
+      ctx.font = '16px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(point.name, x, y - 15);
+
+      // Measure text width
+      const textMetrics = ctx.measureText(point.name);
+      const textWidth = textMetrics.width;
+      const padding = 20;
+      const boxWidth = textWidth + padding * 2;
+      const boxHeight = 30;
+      const radius = 8; // Border radius
+
+      // Draw rounded rectangle background
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.beginPath();
+      ctx.moveTo(x - boxWidth / 2 + radius, y - 55);
+      ctx.lineTo(x + boxWidth / 2 - radius, y - 55);
+      ctx.quadraticCurveTo(
+        x + boxWidth / 2,
+        y - 55,
+        x + boxWidth / 2,
+        y - 55 + radius
+      );
+      ctx.lineTo(x + boxWidth / 2, y - 55 + boxHeight - radius);
+      ctx.quadraticCurveTo(
+        x + boxWidth / 2,
+        y - 55 + boxHeight,
+        x + boxWidth / 2 - radius,
+        y - 55 + boxHeight
+      );
+      ctx.lineTo(x - boxWidth / 2 + radius, y - 55 + boxHeight);
+      ctx.quadraticCurveTo(
+        x - boxWidth / 2,
+        y - 55 + boxHeight,
+        x - boxWidth / 2,
+        y - 55 + boxHeight - radius
+      );
+      ctx.lineTo(x - boxWidth / 2, y - 55 + radius);
+      ctx.quadraticCurveTo(
+        x - boxWidth / 2,
+        y - 55,
+        x - boxWidth / 2 + radius,
+        y - 55
+      );
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw label text
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(point.name, x, y - 35);
     });
   }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
 
@@ -369,7 +443,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       const distance = Math.sqrt(
         Math.pow(clickX - pointX, 2) + Math.pow(clickY - pointY, 2)
       );
-      return distance < 10;
+      return distance < 50;
     });
 
     if (clickedPoint) {
