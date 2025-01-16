@@ -7,6 +7,20 @@ const CanvasMap = ({ mapImageUrl }) => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const imageRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [scale, setScale] = useState(1);
+
+  // Calculate scale to cover entire screen
+  const calculateCoverScale = (
+    imageWidth,
+    imageHeight,
+    containerWidth,
+    containerHeight
+  ) => {
+    const widthScale = containerWidth / imageWidth;
+    const heightScale = containerHeight / imageHeight;
+    // Use the larger scale to ensure full coverage
+    return Math.max(widthScale, heightScale);
+  };
 
   // Load the image
   useEffect(() => {
@@ -15,6 +29,26 @@ const CanvasMap = ({ mapImageUrl }) => {
     image.onload = () => {
       imageRef.current = image;
       setIsLoaded(true);
+
+      // Calculate initial scale to cover screen
+      if (canvasRef.current) {
+        const canvas = canvasRef.current;
+        const container = canvas.parentElement;
+        const newScale = calculateCoverScale(
+          image.width,
+          image.height,
+          container.clientWidth,
+          container.clientHeight
+        );
+        setScale(newScale);
+
+        // Center the image initially
+        const scaledWidth = image.width * newScale;
+        const scaledHeight = image.height * newScale;
+        const centerX = (container.clientWidth - scaledWidth) / 2;
+        const centerY = (container.clientHeight - scaledHeight) / 2;
+        setOffset({ x: centerX, y: centerY });
+      }
     };
   }, [mapImageUrl]);
 
@@ -24,41 +58,54 @@ const CanvasMap = ({ mapImageUrl }) => {
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+    const container = canvas.parentElement;
 
     // Set canvas size to match container
-    const container = canvas.parentElement;
     canvas.width = container.clientWidth;
     canvas.height = container.clientHeight;
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw image with current offset
+    // Calculate scaled dimensions
+    const scaledWidth = imageRef.current.width * scale;
+    const scaledHeight = imageRef.current.height * scale;
+
+    // Draw image with current offset and scale
     ctx.drawImage(
       imageRef.current,
       offset.x,
       offset.y,
-      imageRef.current.width,
-      imageRef.current.height
+      scaledWidth,
+      scaledHeight
     );
-  }, [offset, isLoaded]);
+  }, [offset, isLoaded, scale]);
 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      if (!canvasRef.current) return;
+      if (!canvasRef.current || !imageRef.current) return;
+
       const canvas = canvasRef.current;
       const container = canvas.parentElement;
+      const image = imageRef.current;
+
+      // Update canvas dimensions
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
 
+      // Recalculate scale to cover viewport
+      const newScale = calculateCoverScale(
+        image.width,
+        image.height,
+        container.clientWidth,
+        container.clientHeight
+      );
+      setScale(newScale);
+
       // Ensure image stays within bounds after resize
-      if (imageRef.current) {
-        const boundedOffset = getBoundedOffset(offset);
-        if (boundedOffset.x !== offset.x || boundedOffset.y !== offset.y) {
-          setOffset(boundedOffset);
-        }
-      }
+      const boundedOffset = getBoundedOffset(offset, newScale);
+      setOffset(boundedOffset);
     };
 
     window.addEventListener("resize", handleResize);
@@ -66,17 +113,21 @@ const CanvasMap = ({ mapImageUrl }) => {
   }, [offset]);
 
   // Calculate bounded offset to keep image within view
-  const getBoundedOffset = (newOffset) => {
+  const getBoundedOffset = (newOffset, currentScale = scale) => {
     if (!canvasRef.current || !imageRef.current) return newOffset;
 
     const canvas = canvasRef.current;
     const image = imageRef.current;
 
-    // Calculate bounds
-    const minX = -(image.width - canvas.width);
-    const minY = -(image.height - canvas.height);
-    const maxX = 0;
-    const maxY = 0;
+    // Calculate scaled dimensions
+    const scaledWidth = image.width * currentScale;
+    const scaledHeight = image.height * currentScale;
+
+    // Calculate bounds to ensure image always covers the screen
+    const minX = Math.min(0, canvas.width - scaledWidth);
+    const minY = Math.min(0, canvas.height - scaledHeight);
+    const maxX = Math.max(0, canvas.width - scaledWidth);
+    const maxY = Math.max(0, canvas.height - scaledHeight);
 
     return {
       x: Math.min(maxX, Math.max(minX, newOffset.x)),
@@ -110,7 +161,7 @@ const CanvasMap = ({ mapImageUrl }) => {
   };
 
   return (
-    <div className="w-full h-screen relative bg-gray-100">
+    <div className="fixed inset-0 overflow-hidden bg-gray-100">
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
