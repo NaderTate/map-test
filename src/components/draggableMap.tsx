@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import React, { useEffect, useRef, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 interface LocationPoint {
   id: number;
@@ -18,12 +18,12 @@ const locationPoints: LocationPoint[] = [
     id: 1,
     x: 0.2,
     y: 0.3,
-    name: 'Location A',
-    pattern: '5,5',
-    color: '#ffff',
-    distance: '3.2 km',
-    duration: '12 min',
-    description: 'Location A description',
+    name: "Location A",
+    pattern: "5,5",
+    color: "#ffff",
+    distance: "3.2 km",
+    duration: "12 min",
+    description: "Location A description",
   },
 ];
 
@@ -46,12 +46,16 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   const animatePath = (path: { x: number; y: number }[], startTime: number) => {
-    const animationDuration = 200; // 1 second
+    const animationDuration = 1000; // Increased to 1 second for smoother animation
     const now = performance.now();
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / animationDuration, 1);
 
-    setPathProgress(progress);
+    // Use easing function for smoother animation
+    const easeOutQuad = (t: number) => t * (2 - t);
+    const easedProgress = easeOutQuad(progress);
+
+    setPathProgress(easedProgress);
 
     if (progress < 1) {
       animationFrameRef.current = requestAnimationFrame(() =>
@@ -62,10 +66,10 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
   // Calculate scale to cover entire screen
   const calculateCoverScale = (
-    imageWidth,
-    imageHeight,
-    containerWidth,
-    containerHeight
+    imageWidth: number,
+    imageHeight: number,
+    containerWidth: number,
+    containerHeight: number
   ) => {
     const widthScale = containerWidth / imageWidth;
     const heightScale = containerHeight / imageHeight;
@@ -85,26 +89,32 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
         const container = canvas.parentElement;
-        const newScale = calculateCoverScale(
-          image.width,
-          image.height,
-          container.clientWidth,
-          container.clientHeight
-        );
-        setScale(newScale);
+        if (container) {
+          const newScale = calculateCoverScale(
+            image.width,
+            image.height,
+            container.clientWidth,
+            container.clientHeight
+          );
+          setScale(newScale);
 
-        // Center the image initially
-        const scaledWidth = image.width * newScale;
-        const scaledHeight = image.height * newScale;
-        const centerX = (container.clientWidth - scaledWidth) / 2;
-        const centerY = (container.clientHeight - scaledHeight) / 2;
-        setOffset({ x: centerX, y: centerY });
+          // Center the image initially
+          const scaledWidth = image.width * newScale;
+          const scaledHeight = image.height * newScale;
+          const centerX = (container.clientWidth - scaledWidth) / 2;
+          const centerY = (container.clientHeight - scaledHeight) / 2;
+          setOffset({ x: centerX, y: centerY });
+        }
       }
     };
   }, [mapImageUrl]);
 
-  const generatePath = (start, end, seed) => {
-    const pseudoRandom = (index) => {
+  const generatePath = (
+    start: { x: number; y: number },
+    end: { x: number; y: number },
+    seed: number
+  ) => {
+    const pseudoRandom = (index: number) => {
       return (Math.sin(seed * index) + 1) / 2;
     };
 
@@ -136,7 +146,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const container = canvas.parentElement;
 
     if (!ctx || !container) return;
@@ -157,7 +167,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     );
 
     if (selectedPoint && showOverlay) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fillRect(offset.x, offset.y, scaledWidth, scaledHeight);
     }
 
@@ -167,9 +177,15 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     if (selectedPoint) {
       const path = generatePath(startPoint, selectedPoint, selectedPoint.id);
       ctx.beginPath();
-      const pointsToDraw = Math.floor(path.length * pathProgress);
 
-      path.slice(0, pointsToDraw).forEach((point, index) => {
+      // Calculate the exact point along the path based on progress
+      const totalLength = path.length - 1;
+      const exactProgress = totalLength * pathProgress;
+      const currentSegment = Math.floor(exactProgress);
+      const segmentProgress = exactProgress - currentSegment;
+
+      // Draw completed segments
+      path.slice(0, currentSegment + 1).forEach((point, index) => {
         const x = offset.x + scaledWidth * point.x;
         const y = offset.y + scaledHeight * point.y;
         if (index === 0) {
@@ -179,8 +195,22 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
         }
       });
 
+      // Interpolate the final point
+      if (currentSegment < path.length - 1) {
+        const currentPoint = path[currentSegment];
+        const nextPoint = path[currentSegment + 1];
+        const interpolatedX =
+          currentPoint.x + (nextPoint.x - currentPoint.x) * segmentProgress;
+        const interpolatedY =
+          currentPoint.y + (nextPoint.y - currentPoint.y) * segmentProgress;
+
+        const x = offset.x + scaledWidth * interpolatedX;
+        const y = offset.y + scaledHeight * interpolatedY;
+        ctx.lineTo(x, y);
+      }
+
       // Draw path to selected point
-      ctx.strokeStyle = selectedPoint.color || '#FFFFFF';
+      ctx.strokeStyle = selectedPoint.color || "#FFFFFF";
       ctx.lineWidth = 4;
       ctx.stroke();
     }
@@ -189,7 +219,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const startY = offset.y + scaledHeight * startPoint.y;
     ctx.beginPath();
     ctx.arc(startX, startY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#4CAF50';
+    ctx.fillStyle = "#4CAF50";
     ctx.fill();
 
     // Draw location points
@@ -199,15 +229,15 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#0000ff';
+      ctx.fillStyle = selectedPoint?.id === point.id ? "#ff0000" : "#0000ff";
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
+      ctx.strokeStyle = "#ffffff";
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.font = '14px Arial';
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
+      ctx.font = "14px Arial";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
       ctx.fillText(point.name, x, y - 15);
     });
   }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
@@ -219,7 +249,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       const canvas = canvasRef.current;
       const container = canvas.parentElement;
-      const image = imageRef.current;
+      if (!container) return;
 
       // Update canvas dimensions
       canvas.width = container.clientWidth;
@@ -227,8 +257,8 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       // Recalculate scale to cover viewport
       const newScale = calculateCoverScale(
-        image.width,
-        image.height,
+        imageRef.current.width,
+        imageRef.current.height,
         container.clientWidth,
         container.clientHeight
       );
@@ -239,12 +269,15 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       setOffset(boundedOffset);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [offset]);
 
   // Calculate bounded offset to keep image within view
-  const getBoundedOffset = (newOffset, currentScale = scale) => {
+  const getBoundedOffset = (
+    newOffset: { x: number; y: number },
+    currentScale = scale
+  ) => {
     if (!canvasRef.current || !imageRef.current) return newOffset;
 
     const canvas = canvasRef.current;
@@ -347,7 +380,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
