@@ -1,30 +1,108 @@
-import React, { useState, useRef, MouseEvent } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
-interface DraggableMapProps {
-  mapImageUrl: string;
-}
-
-const DraggableMap: React.FC<DraggableMapProps> = ({ mapImageUrl }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+const CanvasMap = ({ mapImageUrl }) => {
+  const canvasRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const mapRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleMouseDown = (e: MouseEvent) => {
+  // Load the image
+  useEffect(() => {
+    const image = new Image();
+    image.src = mapImageUrl;
+    image.onload = () => {
+      imageRef.current = image;
+      setIsLoaded(true);
+    };
+  }, [mapImageUrl]);
+
+  // Draw the map on canvas
+  useEffect(() => {
+    if (!isLoaded || !canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    // Set canvas size to match container
+    const container = canvas.parentElement;
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw image with current offset
+    ctx.drawImage(
+      imageRef.current,
+      offset.x,
+      offset.y,
+      imageRef.current.width,
+      imageRef.current.height
+    );
+  }, [offset, isLoaded]);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (!canvasRef.current) return;
+      const canvas = canvasRef.current;
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+
+      // Ensure image stays within bounds after resize
+      if (imageRef.current) {
+        const boundedOffset = getBoundedOffset(offset);
+        if (boundedOffset.x !== offset.x || boundedOffset.y !== offset.y) {
+          setOffset(boundedOffset);
+        }
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [offset]);
+
+  // Calculate bounded offset to keep image within view
+  const getBoundedOffset = (newOffset) => {
+    if (!canvasRef.current || !imageRef.current) return newOffset;
+
+    const canvas = canvasRef.current;
+    const image = imageRef.current;
+
+    // Calculate bounds
+    const minX = -(image.width - canvas.width);
+    const minY = -(image.height - canvas.height);
+    const maxX = 0;
+    const maxY = 0;
+
+    return {
+      x: Math.min(maxX, Math.max(minX, newOffset.x)),
+      y: Math.min(maxY, Math.max(minY, newOffset.y)),
+    };
+  };
+
+  const handleMouseDown = (e) => {
     setIsDragging(true);
     setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
+      x: e.clientX - offset.x,
+      y: e.clientY - offset.y,
     });
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = (e) => {
     if (!isDragging) return;
 
-    setPosition({
+    const newOffset = {
       x: e.clientX - dragStart.x,
       y: e.clientY - dragStart.y,
-    });
+    };
+
+    // Apply bounds checking
+    const boundedOffset = getBoundedOffset(newOffset);
+    setOffset(boundedOffset);
   };
 
   const handleMouseUp = () => {
@@ -32,39 +110,19 @@ const DraggableMap: React.FC<DraggableMapProps> = ({ mapImageUrl }) => {
   };
 
   return (
-    <div
-      className="map-container"
-      style={{
-        overflow: 'hidden',
-        width: '100%',
-        height: '100vh',
-        position: 'relative',
-      }}
-    >
-      <div
-        ref={mapRef}
-        style={{
-          position: 'absolute',
-          transform: `translate(${position.x}px, ${position.y}px)`,
-          cursor: isDragging ? 'grabbing' : 'grab',
-        }}
+    <div className="w-full h-screen relative bg-gray-100">
+      <canvas
+        ref={canvasRef}
+        className={`w-full h-full ${
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-      >
-        <img
-          src={mapImageUrl}
-          alt="Draggable Map"
-          style={{
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-          }}
-          draggable={false}
-        />
-      </div>
+      />
     </div>
   );
 };
 
-export default DraggableMap;
+export default CanvasMap;
