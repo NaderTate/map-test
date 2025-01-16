@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import React, { useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 
 interface LocationPoint {
   id: number;
@@ -18,12 +18,41 @@ const locationPoints: LocationPoint[] = [
     id: 1,
     x: 0.2,
     y: 0.3,
-    name: "Location A",
-    pattern: "5,5",
-    color: "#ffff",
-    distance: "3.2 km",
-    duration: "12 min",
-    description: "Location A description",
+    name: 'Location A',
+    pattern: '5,5',
+    distance: '3.2 km',
+    duration: '12 min',
+    description: 'Location A description',
+  },
+  {
+    id: 2,
+    x: 0.7,
+    y: 0.4,
+    name: 'Location B',
+    pattern: '3,3',
+    distance: '2.1 km',
+    duration: '8 min',
+    description: 'Location B description',
+  },
+  {
+    id: 3,
+    x: 0.3,
+    y: 0.8,
+    name: 'Location C',
+    pattern: '4,4',
+    distance: '4.5 km',
+    duration: '15 min',
+    description: 'Location C description',
+  },
+  {
+    id: 4,
+    x: 0.8,
+    y: 0.6,
+    name: 'Location D',
+    pattern: '6,6',
+    distance: '3.8 km',
+    duration: '11 min',
+    description: 'Location D description',
   },
 ];
 
@@ -146,7 +175,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const container = canvas.parentElement;
 
     if (!ctx || !container) return;
@@ -167,7 +196,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     );
 
     if (selectedPoint && showOverlay) {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
       ctx.fillRect(offset.x, offset.y, scaledWidth, scaledHeight);
     }
 
@@ -210,7 +239,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       }
 
       // Draw path to selected point
-      ctx.strokeStyle = selectedPoint.color || "#FFFFFF";
+      ctx.strokeStyle = selectedPoint.color || '#FFFFFF';
       ctx.lineWidth = 4;
       ctx.stroke();
     }
@@ -219,7 +248,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const startY = offset.y + scaledHeight * startPoint.y;
     ctx.beginPath();
     ctx.arc(startX, startY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = "#4CAF50";
+    ctx.fillStyle = '#4CAF50';
     ctx.fill();
 
     // Draw location points
@@ -229,15 +258,15 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = selectedPoint?.id === point.id ? "#ff0000" : "#0000ff";
+      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#0000ff';
       ctx.fill();
-      ctx.strokeStyle = "#ffffff";
+      ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.font = "14px Arial";
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
+      ctx.font = '14px Arial';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
       ctx.fillText(point.name, x, y - 15);
     });
   }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
@@ -269,8 +298,8 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       setOffset(boundedOffset);
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [offset]);
 
   // Calculate bounded offset to keep image within view
@@ -380,7 +409,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
