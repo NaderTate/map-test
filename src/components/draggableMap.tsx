@@ -80,7 +80,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   const [selectedPoint, setSelectedPoint] = useState<LocationPoint | null>(
     null
   );
-  const [animationKey, setAnimationKey] = useState(0);
+  // const [animationKey, setAnimationKey] = useState(0);
   const [pathProgress, setPathProgress] = useState(0);
   const animationFrameRef = useRef<number>();
   const [showOverlay, setShowOverlay] = useState(false);
@@ -457,7 +457,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     if (clickedPoint) {
       setSelectedPoint(clickedPoint);
       setShowOverlay(true);
-      setAnimationKey((prev) => prev + 1);
+      // setAnimationKey((prev) => prev + 1);
       setPathProgress(0);
 
       // Cancel any existing animation
