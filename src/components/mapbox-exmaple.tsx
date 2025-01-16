@@ -1,10 +1,9 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 const Map = () => {
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [animationKey, setAnimationKey] = useState(0);
-  const [cardPosition, setCardPosition] = useState({ x: 0, y: 0 });
   const svgRef = useRef(null);
 
   const startPoint = { x: 200, y: 200 };
@@ -96,30 +95,6 @@ const Map = () => {
     }, {});
   }, []);
 
-  const updateCardPosition = (point) => {
-    if (!svgRef.current || !point) return;
-
-    const svgRect = svgRef.current.getBoundingClientRect();
-    const scaleX = svgRect.width / 400; // 400 is SVG viewBox width
-    const scaleY = svgRect.height / 400; // 400 is SVG viewBox height
-
-    const x = point.x * scaleX + svgRect.left;
-    const y = point.y * scaleY + svgRect.top;
-
-    setCardPosition({ x, y });
-  };
-
-  useEffect(() => {
-    updateCardPosition(selectedPoint);
-
-    const handleResize = () => {
-      updateCardPosition(selectedPoint);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [selectedPoint]);
-
   const handlePointClick = (point, e) => {
     e.stopPropagation();
     setSelectedPoint(point);
@@ -144,21 +119,19 @@ const Map = () => {
         }`}
       />
 
-      {/* Info Card */}
-      {selectedPoint && (
-        <div
-          className="absolute z-10"
-          style={{
-            left: `${cardPosition.x}px`,
-            top: `${cardPosition.y}px`,
-            transform: "translate(-50%, -120%)",
-          }}
-          onClick={(e) => e.stopPropagation()}
+      {/* Fixed Info Card */}
+      <div className="fixed bottom-4 left-4 z-50">
+        <Card
+          className={`w-64 bg-black/80 text-white border-gray-700 transition-opacity duration-300 ${
+            selectedPoint ? "opacity-100" : "opacity-0"
+          }`}
         >
-          <Card className="w-64 bg-black/80 text-white border-gray-700">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">{selectedPoint.name}</CardTitle>
-            </CardHeader>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">
+              {selectedPoint ? selectedPoint.name : "Select a location"}
+            </CardTitle>
+          </CardHeader>
+          {selectedPoint && (
             <CardContent>
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
@@ -174,9 +147,9 @@ const Map = () => {
                 </p>
               </div>
             </CardContent>
-          </Card>
-        </div>
-      )}
+          )}
+        </Card>
+      </div>
 
       <svg
         className="absolute inset-0 w-full h-full"
