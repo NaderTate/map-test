@@ -1,17 +1,33 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 
 interface LocationPoint {
   id: number;
   x: number;
   y: number;
   name: string;
+  distance?: string;
+  duration?: string;
+  description?: string;
+  pattern?: string;
+  color?: string;
 }
 
 const locationPoints: LocationPoint[] = [
-  { id: 1, x: 0.2, y: 0.3, name: 'Location A' },
-  { id: 2, x: 0.6, y: 0.4, name: 'Location B' },
-  { id: 3, x: 0.8, y: 0.7, name: 'Location C' },
+  {
+    id: 1,
+    x: 0.2,
+    y: 0.3,
+    name: 'Location A',
+    pattern: '5,5',
+    color: '#ffff',
+    distance: '3.2 km',
+    duration: '12 min',
+    description: 'Location A description',
+  },
 ];
+
+const startPoint = { x: 0.5, y: 0.5 };
 
 const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,6 +40,25 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   const [selectedPoint, setSelectedPoint] = useState<LocationPoint | null>(
     null
   );
+  const [animationKey, setAnimationKey] = useState(0);
+  const [pathProgress, setPathProgress] = useState(0);
+  const animationFrameRef = useRef<number>();
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  const animatePath = (path: { x: number; y: number }[], startTime: number) => {
+    const animationDuration = 200; // 1 second
+    const now = performance.now();
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / animationDuration, 1);
+
+    setPathProgress(progress);
+
+    if (progress < 1) {
+      animationFrameRef.current = requestAnimationFrame(() =>
+        animatePath(path, startTime)
+      );
+    }
+  };
 
   // Calculate scale to cover entire screen
   const calculateCoverScale = (
@@ -40,7 +75,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
   // Load the image
   useEffect(() => {
-    const image = new Image();
+    const image = imageRef.current;
     image.src = mapImageUrl;
     image.onload = () => {
       imageRef.current = image;
@@ -68,6 +103,35 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     };
   }, [mapImageUrl]);
 
+  const generatePath = (start, end, seed) => {
+    const pseudoRandom = (index) => {
+      return (Math.sin(seed * index) + 1) / 2;
+    };
+
+    const segments = Math.floor(pseudoRandom(1) * 3) + 2;
+    const points = [start];
+
+    for (let i = 0; i < segments; i++) {
+      const prevPoint = points[points.length - 1];
+      const nextPoint = {
+        x: prevPoint.x + (end.x - prevPoint.x) / (segments - i),
+        y: prevPoint.y,
+      };
+
+      if (i < segments - 1) {
+        nextPoint.x += (pseudoRandom(i + 2) - 0.5) * 0.1;
+        nextPoint.y += (pseudoRandom(i + 3) - 0.5) * 0.1;
+      } else {
+        nextPoint.x = end.x;
+        nextPoint.y = end.y;
+      }
+
+      points.push(nextPoint);
+    }
+
+    return points;
+  };
+
   useEffect(() => {
     if (!isLoaded || !canvasRef.current) return;
 
@@ -84,7 +148,6 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const scaledWidth = imageRef.current.width * scale;
     const scaledHeight = imageRef.current.height * scale;
 
-    // Draw the base image
     ctx.drawImage(
       imageRef.current,
       offset.x,
@@ -93,6 +156,43 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       scaledHeight
     );
 
+    if (selectedPoint && showOverlay) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(offset.x, offset.y, scaledWidth, scaledHeight);
+    }
+
+    // Draw base image
+
+    // Draw start point
+    if (selectedPoint) {
+      const path = generatePath(startPoint, selectedPoint, selectedPoint.id);
+      ctx.beginPath();
+      const pointsToDraw = Math.floor(path.length * pathProgress);
+
+      path.slice(0, pointsToDraw).forEach((point, index) => {
+        const x = offset.x + scaledWidth * point.x;
+        const y = offset.y + scaledHeight * point.y;
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+
+      // Draw path to selected point
+      ctx.strokeStyle = selectedPoint.color || '#FFFFFF';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    }
+
+    const startX = offset.x + scaledWidth * startPoint.x;
+    const startY = offset.y + scaledHeight * startPoint.y;
+    ctx.beginPath();
+    ctx.arc(startX, startY, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#4CAF50';
+    ctx.fill();
+
+    // Draw location points
     locationPoints.forEach((point) => {
       const x = offset.x + scaledWidth * point.x;
       const y = offset.y + scaledHeight * point.y;
@@ -110,7 +210,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       ctx.textAlign = 'center';
       ctx.fillText(point.name, x, y - 15);
     });
-  }, [offset, isLoaded, scale, selectedPoint]);
+  }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
 
   // Handle window resize
   useEffect(() => {
@@ -191,12 +291,6 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     setIsDragging(false);
   };
 
-  //   const handleWheel = (e: React.WheelEvent) => {
-  //     e.preventDefault();
-  //     const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-  //     setScale((prevScale) => Math.min(Math.max(0.1, prevScale * zoomFactor), 5));
-  //   };
-
   const handleCanvasClick = (e: React.MouseEvent) => {
     if (!canvasRef.current || !imageRef.current) return;
 
@@ -216,8 +310,37 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       return distance < 10;
     });
 
-    setSelectedPoint(clickedPoint || null);
+    if (clickedPoint) {
+      setSelectedPoint(clickedPoint);
+      setShowOverlay(true);
+      setAnimationKey((prev) => prev + 1);
+      setPathProgress(0);
+
+      // Cancel any existing animation
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+
+      // Start new animation
+      animationFrameRef.current = requestAnimationFrame(() =>
+        animatePath(
+          generatePath(startPoint, clickedPoint, clickedPoint.id),
+          performance.now()
+        )
+      );
+    } else {
+      setSelectedPoint(null);
+      setShowOverlay(false);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="fixed inset-0 overflow-hidden bg-gray-100">
@@ -231,12 +354,26 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onClick={handleCanvasClick}
-        // onWheel={handleWheel}
       />
       {selectedPoint && (
-        <div className="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-lg">
-          <h3 className="font-bold">{selectedPoint.name}</h3>
-        </div>
+        <Card className="fixed bottom-4 left-4 w-64 bg-black/80 text-white border-gray-700">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">{selectedPoint.name}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span>Distance:</span>
+                <span>{selectedPoint.distance}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Duration:</span>
+                <span>{selectedPoint.duration}</span>
+              </div>
+              <p className="text-gray-300 mt-2">{selectedPoint.description}</p>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
