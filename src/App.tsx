@@ -1,12 +1,13 @@
-import './App.css';
+import "./App.css";
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-} from 'react-router-dom';
-import MapExample from './components/mapbox-exmaple';
-import DraggableMap from './components/draggableMap';
+} from "react-router-dom";
+import MapExample from "./components/mapbox-exmaple";
+import DraggableMap from "./components/draggableMap";
+import DraggableMapWithPoints from "./components/draggableMapWithPoints";
 
 function App() {
   const router = createBrowserRouter(
@@ -15,6 +16,12 @@ function App() {
       <Route
         path="/map"
         element={<DraggableMap mapImageUrl="src/assets/landmark.jpg" />}
+      ></Route>,
+      <Route
+        path="/map-with-points"
+        element={
+          <DraggableMapWithPoints mapImageUrl="src/assets/landmark.jpg" />
+        }
       ></Route>,
     ])
   );
