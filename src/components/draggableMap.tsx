@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import React, { useEffect, useRef, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
 interface LocationPoint {
   id: number;
@@ -9,7 +9,7 @@ interface LocationPoint {
   distance?: string;
   duration?: string;
   description?: string;
-  pattern?: string;
+  pathPoints: { x: number; y: number }[];
   color?: string;
 }
 
@@ -18,41 +18,61 @@ const locationPoints: LocationPoint[] = [
     id: 1,
     x: 0.2,
     y: 0.3,
-    name: 'Location A',
-    pattern: '5,5',
-    distance: '3.2 km',
-    duration: '12 min',
-    description: 'Location A description',
+    name: "Location A",
+    distance: "3.2 km",
+    duration: "12 min",
+    description: "Location A description",
+    pathPoints: [
+      { x: 0.5, y: 0.5 },
+      { x: 0.4, y: 0.5 },
+      { x: 0.3, y: 0.4 },
+      { x: 0.2, y: 0.3 },
+    ],
   },
   {
     id: 2,
     x: 0.7,
     y: 0.4,
-    name: 'Location B',
-    pattern: '3,3',
-    distance: '2.1 km',
-    duration: '8 min',
-    description: 'Location B description',
+    name: "Location B",
+    distance: "2.1 km",
+    duration: "8 min",
+    description: "Location B description",
+    pathPoints: [
+      { x: 0.5, y: 0.5 },
+      { x: 0.5, y: 0.4 },
+      { x: 0.6, y: 0.4 },
+      { x: 0.7, y: 0.4 },
+    ],
   },
   {
     id: 3,
     x: 0.3,
     y: 0.8,
-    name: 'Location C',
-    pattern: '4,4',
-    distance: '4.5 km',
-    duration: '15 min',
-    description: 'Location C description',
+    name: "Location C",
+    distance: "4.5 km",
+    duration: "15 min",
+    description: "Location C description",
+    pathPoints: [
+      { x: 0.5, y: 0.5 },
+      { x: 0.5, y: 0.6 },
+      { x: 0.4, y: 0.7 },
+      { x: 0.3, y: 0.8 },
+    ],
   },
   {
     id: 4,
     x: 0.8,
     y: 0.6,
-    name: 'Location D',
-    pattern: '6,6',
-    distance: '3.8 km',
-    duration: '11 min',
-    description: 'Location D description',
+    name: "Location D",
+    distance: "3.8 km",
+    duration: "11 min",
+    description: "Location D description",
+    pathPoints: [
+      { x: 0.5, y: 0.5 },
+      { x: 0.6, y: 0.5 },
+      { x: 0.7, y: 0.6 },
+      { x: 0.8, y: 0.6 },
+    ],
   },
 ];
 
@@ -74,13 +94,23 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   const animationFrameRef = useRef<number>();
   const [showOverlay, setShowOverlay] = useState(false);
 
-  const animatePath = (path: { x: number; y: number }[], startTime: number) => {
-    const animationDuration = 1000; // Increased to 1 second for smoother animation
+  const interpolatePoint = (
+    point1: { x: number; y: number },
+    point2: { x: number; y: number },
+    progress: number
+  ) => {
+    return {
+      x: point1.x + (point2.x - point1.x) * progress,
+      y: point1.y + (point2.y - point1.y) * progress,
+    };
+  };
+
+  const animatePath = (startTime: number) => {
+    const animationDuration = 1000;
     const now = performance.now();
     const elapsed = now - startTime;
     const progress = Math.min(elapsed / animationDuration, 1);
 
-    // Use easing function for smoother animation
     const easeOutQuad = (t: number) => t * (2 - t);
     const easedProgress = easeOutQuad(progress);
 
@@ -88,12 +118,11 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
     if (progress < 1) {
       animationFrameRef.current = requestAnimationFrame(() =>
-        animatePath(path, startTime)
+        animatePath(startTime)
       );
     }
   };
 
-  // Calculate scale to cover entire screen
   const calculateCoverScale = (
     imageWidth: number,
     imageHeight: number,
@@ -102,11 +131,9 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
   ) => {
     const widthScale = containerWidth / imageWidth;
     const heightScale = containerHeight / imageHeight;
-    // Use the larger scale to ensure full coverage
     return Math.max(widthScale, heightScale);
   };
 
-  // Load the image
   useEffect(() => {
     const image = imageRef.current;
     image.src = mapImageUrl;
@@ -114,7 +141,6 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       imageRef.current = image;
       setIsLoaded(true);
 
-      // Calculate initial scale to cover screen
       if (canvasRef.current) {
         const canvas = canvasRef.current;
         const container = canvas.parentElement;
@@ -127,7 +153,6 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
           );
           setScale(newScale);
 
-          // Center the image initially
           const scaledWidth = image.width * newScale;
           const scaledHeight = image.height * newScale;
           const centerX = (container.clientWidth - scaledWidth) / 2;
@@ -138,44 +163,11 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     };
   }, [mapImageUrl]);
 
-  const generatePath = (
-    start: { x: number; y: number },
-    end: { x: number; y: number },
-    seed: number
-  ) => {
-    const pseudoRandom = (index: number) => {
-      return (Math.sin(seed * index) + 1) / 2;
-    };
-
-    const segments = Math.floor(pseudoRandom(1) * 3) + 2;
-    const points = [start];
-
-    for (let i = 0; i < segments; i++) {
-      const prevPoint = points[points.length - 1];
-      const nextPoint = {
-        x: prevPoint.x + (end.x - prevPoint.x) / (segments - i),
-        y: prevPoint.y,
-      };
-
-      if (i < segments - 1) {
-        nextPoint.x += (pseudoRandom(i + 2) - 0.5) * 0.1;
-        nextPoint.y += (pseudoRandom(i + 3) - 0.5) * 0.1;
-      } else {
-        nextPoint.x = end.x;
-        nextPoint.y = end.y;
-      }
-
-      points.push(nextPoint);
-    }
-
-    return points;
-  };
-
   useEffect(() => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const container = canvas.parentElement;
 
     if (!ctx || !container) return;
@@ -187,6 +179,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const scaledWidth = imageRef.current.width * scale;
     const scaledHeight = imageRef.current.height * scale;
 
+    // Draw base image
     ctx.drawImage(
       imageRef.current,
       offset.x,
@@ -196,59 +189,59 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     );
 
     if (selectedPoint && showOverlay) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fillRect(offset.x, offset.y, scaledWidth, scaledHeight);
     }
 
-    // Draw base image
-
-    // Draw start point
+    // Draw animated path
     if (selectedPoint) {
-      const path = generatePath(startPoint, selectedPoint, selectedPoint.id);
+      const path = selectedPoint.pathPoints;
       ctx.beginPath();
 
-      // Calculate the exact point along the path based on progress
-      const totalLength = path.length - 1;
-      const exactProgress = totalLength * pathProgress;
+      const totalSegments = path.length - 1;
+      const exactProgress = totalSegments * pathProgress;
       const currentSegment = Math.floor(exactProgress);
       const segmentProgress = exactProgress - currentSegment;
 
       // Draw completed segments
-      path.slice(0, currentSegment + 1).forEach((point, index) => {
+      for (let i = 0; i <= currentSegment && i < path.length - 1; i++) {
+        const point = path[i];
         const x = offset.x + scaledWidth * point.x;
         const y = offset.y + scaledHeight * point.y;
-        if (index === 0) {
+
+        if (i === 0) {
           ctx.moveTo(x, y);
         } else {
           ctx.lineTo(x, y);
         }
-      });
+      }
 
-      // Interpolate the final point
+      // Draw current animating segment
       if (currentSegment < path.length - 1) {
         const currentPoint = path[currentSegment];
         const nextPoint = path[currentSegment + 1];
-        const interpolatedX =
-          currentPoint.x + (nextPoint.x - currentPoint.x) * segmentProgress;
-        const interpolatedY =
-          currentPoint.y + (nextPoint.y - currentPoint.y) * segmentProgress;
+        const interpolated = interpolatePoint(
+          currentPoint,
+          nextPoint,
+          segmentProgress
+        );
 
-        const x = offset.x + scaledWidth * interpolatedX;
-        const y = offset.y + scaledHeight * interpolatedY;
+        const x = offset.x + scaledWidth * interpolated.x;
+        const y = offset.y + scaledHeight * interpolated.y;
         ctx.lineTo(x, y);
       }
 
-      // Draw path to selected point
-      ctx.strokeStyle = selectedPoint.color || '#FFFFFF';
+      ctx.strokeStyle = selectedPoint.color || "#FFFFFF";
       ctx.lineWidth = 4;
       ctx.stroke();
     }
 
+    // Draw start point
     const startX = offset.x + scaledWidth * startPoint.x;
     const startY = offset.y + scaledHeight * startPoint.y;
     ctx.beginPath();
     ctx.arc(startX, startY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#4CAF50';
+    ctx.fillStyle = "#4CAF50";
     ctx.fill();
 
     // Draw location points
@@ -258,20 +251,19 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#0000ff';
+      ctx.fillStyle = selectedPoint?.id === point.id ? "#ff0000" : "#0000ff";
       ctx.fill();
-      ctx.strokeStyle = '#ffffff';
+      ctx.strokeStyle = "#ffffff";
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      ctx.font = '14px Arial';
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
+      ctx.font = "14px Arial";
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "center";
       ctx.fillText(point.name, x, y - 15);
     });
   }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
 
-  // Handle window resize
   useEffect(() => {
     const handleResize = () => {
       if (!canvasRef.current || !imageRef.current) return;
@@ -280,11 +272,9 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       const container = canvas.parentElement;
       if (!container) return;
 
-      // Update canvas dimensions
       canvas.width = container.clientWidth;
       canvas.height = container.clientHeight;
 
-      // Recalculate scale to cover viewport
       const newScale = calculateCoverScale(
         imageRef.current.width,
         imageRef.current.height,
@@ -293,16 +283,14 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       );
       setScale(newScale);
 
-      // Ensure image stays within bounds after resize
       const boundedOffset = getBoundedOffset(offset, newScale);
       setOffset(boundedOffset);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [offset]);
 
-  // Calculate bounded offset to keep image within view
   const getBoundedOffset = (
     newOffset: { x: number; y: number },
     currentScale = scale
@@ -312,11 +300,9 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const canvas = canvasRef.current;
     const image = imageRef.current;
 
-    // Calculate scaled dimensions
     const scaledWidth = image.width * currentScale;
     const scaledHeight = image.height * currentScale;
 
-    // Calculate bounds to ensure image always covers the screen
     const minX = Math.min(0, canvas.width - scaledWidth);
     const minY = Math.min(0, canvas.height - scaledHeight);
     const maxX = Math.max(0, canvas.width - scaledWidth);
@@ -344,7 +330,6 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       y: e.clientY - dragStart.y,
     };
 
-    // Apply bounds checking
     const boundedOffset = getBoundedOffset(newOffset);
     setOffset(boundedOffset);
   };
@@ -378,17 +363,12 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       setAnimationKey((prev) => prev + 1);
       setPathProgress(0);
 
-      // Cancel any existing animation
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
 
-      // Start new animation
       animationFrameRef.current = requestAnimationFrame(() =>
-        animatePath(
-          generatePath(startPoint, clickedPoint, clickedPoint.id),
-          performance.now()
-        )
+        animatePath(performance.now())
       );
     } else {
       setSelectedPoint(null);
@@ -409,7 +389,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
