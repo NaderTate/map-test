@@ -15,7 +15,9 @@ function App() {
       // <Route path="/" element={<MapExample />}></Route>,
       <Route
         path="/"
-        element={<DraggableMap mapImageUrl="src/assets/landmark.jpg" />}
+        element={
+          <DraggableMap mapImageUrl="https://images4.imagebam.com/f4/e0/5d/MEZ040L_o.jpg" />
+        }
       ></Route>,
       // <Route
       //   path="/map-with-points"
