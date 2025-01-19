@@ -1,13 +1,30 @@
 import React, { useState, useMemo, useRef } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
-const Map = () => {
-  const [selectedPoint, setSelectedPoint] = useState(null);
-  const [animationKey, setAnimationKey] = useState(0);
-  const svgRef = useRef(null);
+interface Point {
+  id: number;
+  x: number;
+  y: number;
+  pattern: string;
+  color: string;
+  name: string;
+  distance: string;
+  duration: string;
+  description: string;
+}
 
-  const startPoint = { x: 200, y: 200 };
-  const points = [
+interface PathPoint {
+  x: number;
+  y: number;
+}
+
+const Map: React.FC = () => {
+  const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
+  const [animationKey, setAnimationKey] = useState<number>(0);
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const startPoint: PathPoint = { x: 200, y: 200 };
+  const points: Point[] = [
     {
       id: 1,
       x: 100,
@@ -54,17 +71,21 @@ const Map = () => {
     },
   ];
 
-  const generatePath = (start, end, seed) => {
-    const pseudoRandom = (index) => {
+  const generatePath = (
+    start: PathPoint,
+    end: PathPoint,
+    seed: number
+  ): PathPoint[] => {
+    const pseudoRandom = (index: number): number => {
       return (Math.sin(seed * index) + 1) / 2;
     };
 
     const segments = Math.floor(pseudoRandom(1) * 3) + 2;
-    const points = [start];
+    const points: PathPoint[] = [start];
 
     for (let i = 0; i < segments; i++) {
       const prevPoint = points[points.length - 1];
-      const nextPoint = {
+      const nextPoint: PathPoint = {
         x: prevPoint.x + (end.x - prevPoint.x) / (segments - i),
         y: prevPoint.y,
       };
@@ -84,24 +105,24 @@ const Map = () => {
   };
 
   const pathStrings = useMemo(() => {
-    return points.reduce((acc, point) => {
+    return points.reduce<Record<number, string>>((acc, point) => {
       const pathPoints = generatePath(startPoint, point, point.id);
       const pathString = pathPoints.reduce((path, pathPoint, index) => {
-        return (
-          path + `${index === 0 ? "M" : "L"} ${pathPoint.x} ${pathPoint.y} `
-        );
+        return `${path}${index === 0 ? "M" : "L"} ${pathPoint.x} ${
+          pathPoint.y
+        } `;
       }, "");
       return { ...acc, [point.id]: pathString };
     }, {});
   }, []);
 
-  const handlePointClick = (point, e) => {
+  const handlePointClick = (point: Point, e: React.MouseEvent): void => {
     e.stopPropagation();
     setSelectedPoint(point);
     setAnimationKey((prev) => prev + 1);
   };
 
-  const handleBackgroundClick = () => {
+  const handleBackgroundClick = (): void => {
     setSelectedPoint(null);
   };
 
@@ -119,7 +140,6 @@ const Map = () => {
         }`}
       />
 
-      {/* Fixed Info Card */}
       <div className="fixed bottom-4 left-4 z-50">
         <Card
           className={`w-64 bg-black/80 text-white border-gray-700 transition-opacity duration-300 ${
@@ -168,17 +188,15 @@ const Map = () => {
           />
         )}
 
-        {/* Starting point */}
         <circle
           cx={startPoint.x}
           cy={startPoint.y}
           r="8"
           fill="#4CAF50"
           className="cursor-pointer"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e: React.MouseEvent) => e.stopPropagation()}
         />
 
-        {/* Surrounding points */}
         {points.map((point) => (
           <g key={point.id}>
             <circle
@@ -197,13 +215,13 @@ const Map = () => {
               stroke={point.color}
               strokeWidth="4"
               strokeDasharray={point.pattern}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
             />
           </g>
         ))}
       </svg>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes draw {
           from {
             stroke-dashoffset: 1000;
@@ -218,7 +236,7 @@ const Map = () => {
           stroke-dashoffset: 1000;
           animation: draw 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 };

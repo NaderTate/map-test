@@ -1,25 +1,54 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
-const InteractiveMap = ({ mapImageUrl }) => {
+interface Point {
+  id: number;
+  x: number;
+  y: number;
+  pattern: string;
+  color: string;
+  name: string;
+  distance: string;
+  duration: string;
+  description: string;
+}
+
+interface Offset {
+  x: number;
+  y: number;
+}
+
+interface InteractiveMapProps {
+  mapImageUrl: string;
+}
+
+const InteractiveMap: React.FC<InteractiveMapProps> = ({ mapImageUrl }) => {
   // Canvas state
-  const canvasRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const imageRef = useRef(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [scale, setScale] = useState(1);
-  const containerRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [offset, setOffset] = useState<Offset>({ x: 0, y: 0 });
+  const [dragStart, setDragStart] = useState<Offset>({ x: 0, y: 0 });
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [scale, setScale] = useState<number>(1);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Points interaction state
-  const [selectedPoint, setSelectedPoint] = useState(null);
-  const [animationKey, setAnimationKey] = useState(0);
-  const svgRef = useRef(null);
+  const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
+  const [animationKey, setAnimationKey] = useState<number>(0);
+  const svgRef = useRef<SVGSVGElement>(null);
 
-  // Define base coordinates for points (these will be transformed based on drag and scale)
-  const baseStartPoint = { x: 200, y: 200 };
-  const basePoints = [
+  // Define base coordinates for points
+  const baseStartPoint: Omit<
+    Point,
+    "pattern" | "color" | "name" | "distance" | "duration" | "description"
+  > = {
+    id: 0,
+    x: 200,
+    y: 200,
+  };
+
+  const basePoints: Point[] = [
     {
       id: 1,
       x: 100,
@@ -67,7 +96,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
   ];
 
   // Transform coordinates based on current offset and scale
-  const transformPoint = (point) => ({
+  const transformPoint = <T extends { x: number; y: number }>(point: T): T => ({
     ...point,
     x: point.x * scale + offset.x,
     y: point.y * scale + offset.y,
@@ -77,14 +106,15 @@ const InteractiveMap = ({ mapImageUrl }) => {
     () => transformPoint(baseStartPoint),
     [scale, offset]
   );
+
   const points = useMemo(() => basePoints.map(transformPoint), [scale, offset]);
 
   const calculateCoverScale = (
-    imageWidth,
-    imageHeight,
-    containerWidth,
-    containerHeight
-  ) => {
+    imageWidth: number,
+    imageHeight: number,
+    containerWidth: number,
+    containerHeight: number
+  ): number => {
     const widthScale = containerWidth / imageWidth;
     const heightScale = containerHeight / imageHeight;
     return Math.max(widthScale, heightScale);
@@ -119,11 +149,13 @@ const InteractiveMap = ({ mapImageUrl }) => {
 
   // Draw the map on canvas
   useEffect(() => {
-    if (!isLoaded || !canvasRef.current) return;
+    if (!isLoaded || !canvasRef.current || !imageRef.current) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const container = containerRef.current;
+
+    if (!ctx || !container) return;
 
     canvas.width = container.clientWidth;
     canvas.height = container.clientHeight;
@@ -165,7 +197,10 @@ const InteractiveMap = ({ mapImageUrl }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [offset]);
 
-  const getBoundedOffset = (newOffset, currentScale = scale) => {
+  const getBoundedOffset = (
+    newOffset: Offset,
+    currentScale: number = scale
+  ): Offset => {
     if (!containerRef.current || !imageRef.current) return newOffset;
 
     const container = containerRef.current;
@@ -184,17 +219,26 @@ const InteractiveMap = ({ mapImageUrl }) => {
     };
   };
 
-  const generatePath = (start, end, seed) => {
-    const pseudoRandom = (index) => {
+  interface PathPoint {
+    x: number;
+    y: number;
+  }
+
+  const generatePath = (
+    start: PathPoint,
+    end: PathPoint,
+    seed: number
+  ): PathPoint[] => {
+    const pseudoRandom = (index: number): number => {
       return (Math.sin(seed * index) + 1) / 2;
     };
 
     const segments = Math.floor(pseudoRandom(1) * 3) + 2;
-    const points = [start];
+    const points: PathPoint[] = [start];
 
     for (let i = 0; i < segments; i++) {
       const prevPoint = points[points.length - 1];
-      const nextPoint = {
+      const nextPoint: PathPoint = {
         x: prevPoint.x + (end.x - prevPoint.x) / (segments - i),
         y: prevPoint.y,
       };
@@ -214,19 +258,19 @@ const InteractiveMap = ({ mapImageUrl }) => {
   };
 
   const pathStrings = useMemo(() => {
-    return points.reduce((acc, point) => {
+    return points.reduce<Record<number, string>>((acc, point) => {
       const pathPoints = generatePath(startPoint, point, point.id);
       const pathString = pathPoints.reduce((path, pathPoint, index) => {
-        return (
-          path + `${index === 0 ? "M" : "L"} ${pathPoint.x} ${pathPoint.y} `
-        );
+        return `${path}${index === 0 ? "M" : "L"} ${pathPoint.x} ${
+          pathPoint.y
+        } `;
       }, "");
       return { ...acc, [point.id]: pathString };
     }, {});
   }, [points, startPoint, scale]);
 
-  const handleMouseDown = (e) => {
-    if (e.target.tagName === "circle") return; // Don't start dragging if clicking on a point
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if ((e.target as HTMLElement).tagName === "circle") return;
     setIsDragging(true);
     setDragStart({
       x: e.clientX - offset.x,
@@ -234,7 +278,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
     });
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDragging) return;
 
     const newOffset = {
@@ -250,7 +294,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
     setIsDragging(false);
   };
 
-  const handlePointClick = (point, e) => {
+  const handlePointClick = (point: Point, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedPoint(point);
     setAnimationKey((prev) => prev + 1);
@@ -297,7 +341,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
             fill="none"
             strokeDasharray={selectedPoint.pattern
               .split(",")
-              .map((n) => n * scale)
+              .map((n) => parseFloat(n) * scale)
               .join(",")}
             className="animate-draw"
           />
@@ -331,7 +375,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
               strokeWidth={4 * scale}
               strokeDasharray={point.pattern
                 .split(",")
-                .map((n) => n * scale)
+                .map((n) => parseFloat(n) * scale)
                 .join(",")}
             />
           </g>
@@ -369,7 +413,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
         </Card>
       </div>
 
-      <style jsx>{`
+      {/* <style jsx>{`
         @keyframes draw {
           from {
             stroke-dashoffset: 1000;
@@ -384,7 +428,7 @@ const InteractiveMap = ({ mapImageUrl }) => {
           stroke-dashoffset: 1000;
           animation: draw 2s cubic-bezier(0.87, 0, 0.13, 1) forwards;
         }
-      `}</style>
+      `}</style> */}
     </div>
   );
 };
