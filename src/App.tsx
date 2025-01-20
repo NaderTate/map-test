@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import DraggableMap from './components/draggableMap';
 import Building from './components/Building';
+import DigitalTwinViewer from './components/digital-twin-viewer';
 
 function App() {
   const router = createBrowserRouter(
@@ -19,6 +20,7 @@ function App() {
         }
       ></Route>,
       <Route path="/3d" element={<Building />}></Route>,
+      <Route path="dt" element={<DigitalTwinViewer />}></Route>,
       // <Route
       //   path="/map-with-points"
       //   element={
