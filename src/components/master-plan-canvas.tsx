@@ -52,10 +52,14 @@ const CanvasPropertyMask: React.FC = () => {
       const image = imageRef.current;
 
       // Calculate the target scale to fit unit with padding
-      const padding = 100;
-      const targetScaleX = (canvas.width - padding * 2) / unit.area.width;
-      const targetScaleY = (canvas.height - padding * 2) / unit.area.height;
-      const unitTargetScale = Math.min(targetScaleX, targetScaleY, 5);
+      const padding = 50;
+
+      const zoomFactor = 1.5;
+      const targetScaleX =
+        ((canvas.width - padding * 2) / unit.area.width) * zoomFactor;
+      const targetScaleY =
+        ((canvas.height - padding * 2) / unit.area.height) * zoomFactor;
+      const unitTargetScale = Math.min(targetScaleX, targetScaleY, 8);
 
       // Ensure we maintain minimum scale for image coverage
       const coverScale = calculateCoverScale(
