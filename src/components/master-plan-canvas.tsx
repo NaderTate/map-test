@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import UnitsFilter from "./UnitFiler";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import UnitsFilter from './UnitFiler';
 
 interface Unit {
   id: string;
@@ -12,8 +12,8 @@ interface Unit {
     y: number;
     width: number;
     height: number;
-    rotation: number;
-    clipPath: string;
+    rotation?: number;
+    clipPath?: string;
   };
 }
 
@@ -24,10 +24,10 @@ interface UnitRelationship {
 
 const units: Unit[] = [
   {
-    id: "villa-a",
-    name: "Villa A",
-    color: "rgba(188, 140, 34, 0.69)",
-    groupId: "single-1",
+    id: 'villa-a',
+    name: 'Villa A',
+    color: 'rgba(188, 140, 34, 0.69)',
+    groupId: 'single-1',
 
     area: {
       x: 230,
@@ -36,14 +36,14 @@ const units: Unit[] = [
       height: 1300,
       rotation: 0,
       clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
+        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
     },
   },
   {
-    id: "villa-b",
-    name: "Villa B",
-    color: "rgba(157, 115, 113, 0.69)",
-    groupId: "combined-1",
+    id: 'villa-b',
+    name: 'Villa B',
+    color: 'rgba(157, 115, 113, 0.69)',
+    groupId: 'combined-1',
     area: {
       x: 2500,
       y: 1000,
@@ -51,14 +51,14 @@ const units: Unit[] = [
       height: 900,
       rotation: 0,
       clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
+        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
     },
   },
   {
-    id: "villa-c",
-    name: "Villa C",
-    color: "rgba(163, 123, 102, 0.69)",
-    groupId: "combined-1",
+    id: 'villa-c',
+    name: 'Villa C',
+    color: 'rgba(163, 123, 102, 0.69)',
+    groupId: 'combined-1',
     area: {
       x: 2000,
       y: 1300,
@@ -66,14 +66,14 @@ const units: Unit[] = [
       height: 1300,
       rotation: 0,
       clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
+        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
     },
   },
   {
-    id: "villa-d",
-    name: "Villa D",
-    color: "rgba(43, 43, 196, 0.69)",
-    groupId: "single-2",
+    id: 'villa-d',
+    name: 'Villa D',
+    color: 'rgba(43, 43, 196, 0.69)',
+    groupId: 'single-2',
     area: {
       x: 1000,
       y: 1300,
@@ -81,36 +81,10 @@ const units: Unit[] = [
       height: 1000,
       rotation: 0,
       clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
+        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
     },
   },
 ];
-
-const unitRelationships: UnitRelationship[] = [
-  {
-    groupId: "combined-1",
-    unitIds: ["villa-b", "villa-c"],
-  },
-];
-
-function areUnitsRelated(unit1Id: string, unit2Id: string): boolean {
-  return unitRelationships.some(
-    (relationship) =>
-      relationship.unitIds.includes(unit1Id) &&
-      relationship.unitIds.includes(unit2Id)
-  );
-}
-
-// Helper function to get all related units
-function getRelatedUnits(unitId: string): Unit[] {
-  const relationship = unitRelationships.find((rel) =>
-    rel.unitIds.includes(unitId)
-  );
-
-  if (!relationship) return [];
-
-  return units.filter((unit) => relationship.unitIds.includes(unit.id));
-}
 
 const CanvasPropertyMask: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -212,9 +186,9 @@ const CanvasPropertyMask: React.FC = () => {
   const getPolygonPoints = (clipPath: string, unit: Unit, scale: number) => {
     return clipPath
       .match(/polygon\((.*?)\)/)?.[1]
-      .split(",")
+      .split(',')
       .map((point) => {
-        const [x, y] = point.trim().split(" ");
+        const [x, y] = point.trim().split(' ');
         return {
           x: (parseFloat(x) / 100) * unit.area.width * scale,
           y: (parseFloat(y) / 100) * unit.area.height * scale,
@@ -277,7 +251,7 @@ const CanvasPropertyMask: React.FC = () => {
   // Load and initialize image
   useEffect(() => {
     const image = imageRef.current;
-    image.src = "/master-1.jpg";
+    image.src = '/master-1.jpg';
     image.onload = () => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
@@ -371,7 +345,7 @@ const CanvasPropertyMask: React.FC = () => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const container = canvas.parentElement;
     if (!ctx || !container) return;
 
@@ -419,12 +393,14 @@ const CanvasPropertyMask: React.FC = () => {
             ctx.closePath();
 
             // Use the animated opacity
-            const baseColorMatch = unit.color.match(
-              /^rgba\((\d+),\s*(\d+),\s*(\d+)/
-            );
-            if (baseColorMatch) {
-              const [_, r, g, b] = baseColorMatch;
-              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${currentOpacity})`;
+            if (unit.id === hoveredUnit) {
+              const baseColorMatch = unit.color.match(
+                /^rgba\((\d+),\s*(\d+),\s*(\d+)/
+              );
+              if (baseColorMatch) {
+                const [_, r, g, b] = baseColorMatch;
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${currentOpacity})`;
+              }
             } else {
               ctx.fillStyle = unit.color;
             }
@@ -591,7 +567,7 @@ const CanvasPropertyMask: React.FC = () => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -617,7 +593,7 @@ const CanvasPropertyMask: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Dimensions</span>
                 <span className="font-medium">
-                  {units.find((u) => u.id === selectedUnit)?.area.width} x{" "}
+                  {units.find((u) => u.id === selectedUnit)?.area.width} x{' '}
                   {units.find((u) => u.id === selectedUnit)?.area.height} m²
                 </span>
               </div>
@@ -656,8 +632,8 @@ const CanvasPropertyMask: React.FC = () => {
             key={unit.id}
             className={`w-full px-4 py-2 text-left rounded-lg transition-colors ${
               selectedUnit === unit.id
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 hover:bg-gray-200"
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200'
             }`}
             onClick={() =>
               setSelectedUnit(unit.id === selectedUnit ? null : unit.id)
