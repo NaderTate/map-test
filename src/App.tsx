@@ -8,7 +8,7 @@ import {
 import DraggableMap from './components/draggableMap';
 import Building from './components/Building';
 import DigitalTwinViewer from './components/digital-twin-viewer';
-import PropertyMask from './components/master-plan';
+// import PropertyMask from './components/master-plan';
 import CanvasPropertyMask from './components/master-plan-canvas';
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
       ></Route>,
       <Route path="/3d" element={<Building />}></Route>,
       <Route path="/dt" element={<DigitalTwinViewer />}></Route>,
-      <Route path="/master-plan" element={<PropertyMask />}></Route>,
+      // <Route path="/master-plan" element={<PropertyMask />}></Route>,
       <Route
         path="/master-plan-canvas"
         element={<CanvasPropertyMask />}
