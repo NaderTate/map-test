@@ -46,7 +46,7 @@ const UnitsFilter: React.FC<UnitsFilterProps> = ({
   }, {} as Record<string, number>);
 
   return (
-    <Card className="fixed top-4 left-4 w-72  backdrop-blur-md shadow-lg rounded-lg overflow-hidden">
+    <Card className="fixed top-4 left-20 w-72  backdrop-blur-md shadow-lg rounded-lg overflow-hidden">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-4 py-3 flex items-center justify-between transition-colors"

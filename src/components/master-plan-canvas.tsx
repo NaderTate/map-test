@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import UnitsFilter from "./UnitFiler";
+import { Link } from "react-router-dom";
 
 interface Unit {
   id: string;
@@ -571,12 +572,16 @@ const CanvasPropertyMask: React.FC = () => {
         onWheel={handleWheel}
         onClick={handleCanvasClick}
       />
-      {/* <UnitsFilter
+      <UnitsFilter
         units={units}
         visibleGroups={visibleGroups}
         onToggleGroup={handleToggleGroup}
-      /> */}
-      <h1 className="text-4xl">HIII</h1>
+      />
+      <div className="bg-white absolute top-4 left-4  rounded-lg">
+        <Link to="/">
+          <img src="/logo.png" className="w-[50px]" />
+        </Link>
+      </div>
       {selectedUnit && (
         <Card className="absolute bottom-4 left-4 w-80 bg-white/90 backdrop-blur-sm shadow-xl">
           <CardHeader className="pb-2">
