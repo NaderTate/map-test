@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import React, { useEffect, useRef, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { Link } from "react-router-dom";
 
 interface PathPoint {
   x: number;
@@ -27,11 +28,11 @@ const locationPoints: LocationPoint[] = [
     id: 1,
     x: 0.2,
     y: 0.3,
-    name: 'Location A',
-    pattern: '5,5',
-    distance: '3.2 km',
-    duration: '12 min',
-    description: 'Location A description',
+    name: "Location A",
+    pattern: "5,5",
+    distance: "3.2 km",
+    duration: "12 min",
+    description: "Location A description",
     pathPoints: [
       startPoint, // Start point
       { x: 0.45, y: 0.5 }, // Via point 1
@@ -45,11 +46,11 @@ const locationPoints: LocationPoint[] = [
     id: 2,
     x: 0.7,
     y: 0.4,
-    name: 'Location B',
-    pattern: '3,3',
-    distance: '2.1 km',
-    duration: '8 min',
-    description: 'Location B description',
+    name: "Location B",
+    pattern: "3,3",
+    distance: "2.1 km",
+    duration: "8 min",
+    description: "Location B description",
     pathPoints: [
       startPoint,
       { x: 0.57, y: 0.48 },
@@ -185,7 +186,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const container = canvas.parentElement;
 
     if (!ctx || !container) return;
@@ -206,7 +207,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     );
 
     if (selectedPoint && showOverlay) {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       ctx.fillRect(offset.x, offset.y, scaledWidth, scaledHeight);
     }
 
@@ -245,7 +246,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
         ctx.lineTo(x, y);
       }
 
-      ctx.strokeStyle = selectedPoint.color || '#FFFFFF';
+      ctx.strokeStyle = selectedPoint.color || "#FFFFFF";
       ctx.lineWidth = 4;
       ctx.stroke();
     }
@@ -259,7 +260,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     ctx.lineTo(startX, startY - 50); // Go straight up
     ctx.lineTo(startX + 30, startY - 80); // First angle to the right
     ctx.lineTo(startX + 30, startY - 120); // Straight up again
-    ctx.strokeStyle = '#FFFFFF'; // White color as shown in the image
+    ctx.strokeStyle = "#FFFFFF"; // White color as shown in the image
     ctx.lineWidth = 3;
     ctx.stroke();
 
@@ -270,31 +271,31 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     ctx.lineTo(startX + 30, startY - 132); // Top point
     ctx.lineTo(startX + 36, startY - 126); // Right point
     ctx.closePath();
-    ctx.fillStyle = '#FFFFFF';
+    ctx.fillStyle = "#FFFFFF";
     ctx.fill();
-    ctx.strokeStyle = '#FFFFFF'; // Changed to white to match image
+    ctx.strokeStyle = "#FFFFFF"; // Changed to white to match image
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Draw start point circles
     ctx.beginPath();
     ctx.arc(startX, startY, 24, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = "#ffffff";
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(startX, startY, 18, 0, Math.PI * 2);
-    ctx.fillStyle = '#009a43';
+    ctx.fillStyle = "#009a43";
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(startX, startY, 16, 0, Math.PI * 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = "#ffffff";
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(startX, startY, 8, 0, Math.PI * 2);
-    ctx.fillStyle = '#009a43';
+    ctx.fillStyle = "#009a43";
     ctx.fill();
 
     // Draw location points
@@ -304,28 +305,28 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
 
       ctx.beginPath();
       ctx.arc(x, y, 24, 0, Math.PI * 2);
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = "#FFFFFF";
       ctx.fill();
 
       ctx.beginPath();
       ctx.arc(x, y, 18, 0, Math.PI * 2);
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = "#000000";
       ctx.fill();
 
       ctx.beginPath();
       ctx.arc(x, y, 16, 0, Math.PI * 2);
-      ctx.fillStyle = point.color || '#FFFFFF';
+      ctx.fillStyle = point.color || "#FFFFFF";
       ctx.fill();
 
       // Draw inner black circle
       ctx.beginPath();
       ctx.arc(x, y, 8, 0, Math.PI * 2);
-      ctx.fillStyle = selectedPoint?.id === point.id ? '#ff0000' : '#000000';
+      ctx.fillStyle = selectedPoint?.id === point.id ? "#ff0000" : "#000000";
       ctx.fill();
 
       // Draw label
-      ctx.font = '16px Arial';
-      ctx.textAlign = 'center';
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
 
       // Measure text width
       const textMetrics = ctx.measureText(point.name);
@@ -336,7 +337,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       const radius = 8; // Border radius
 
       // Draw rounded rectangle background
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
       ctx.beginPath();
       ctx.moveTo(x - boxWidth / 2 + radius, y - 55);
       ctx.lineTo(x + boxWidth / 2 - radius, y - 55);
@@ -371,7 +372,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       ctx.fill();
 
       // Draw label text
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = "#ffffff";
       ctx.fillText(point.name, x, y - 35);
     });
   }, [offset, isLoaded, scale, selectedPoint, pathProgress, showOverlay]);
@@ -403,8 +404,8 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       setOffset(boundedOffset);
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [offset]);
 
   // Calculate bounded offset to keep image within view
@@ -514,7 +515,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -535,13 +536,15 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
           }px`,
         }}
       >
-        <Card className=" bg-white/90 backdrop-blur-sm border border-gray-200">
-          <CardContent className="p-0">
-            <div className="flex items-center justify-center">
-              <img src="logo.png" alt="Project Logo" className="h-36 w-36" />
-            </div>
-          </CardContent>
-        </Card>
+        <Link to="/master-plan-canvas">
+          <Card className=" bg-white/90 backdrop-blur-sm border border-gray-200">
+            <CardContent className="p-0">
+              <div className="flex items-center justify-center">
+                <img src="logo.png" alt="Project Logo" className="h-36 w-36" />
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {selectedPoint && (

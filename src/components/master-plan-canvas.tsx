@@ -571,11 +571,12 @@ const CanvasPropertyMask: React.FC = () => {
         onWheel={handleWheel}
         onClick={handleCanvasClick}
       />
-      <UnitsFilter
+      {/* <UnitsFilter
         units={units}
         visibleGroups={visibleGroups}
         onToggleGroup={handleToggleGroup}
-      />
+      /> */}
+      <h1 className="text-4xl">HIII</h1>
       {selectedUnit && (
         <Card className="absolute bottom-4 left-4 w-80 bg-white/90 backdrop-blur-sm shadow-xl">
           <CardHeader className="pb-2">
