@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Unit {
   id: string;
@@ -16,17 +16,17 @@ interface Unit {
 
 const units: Unit[] = [
   {
-    id: "villa-a",
-    name: "Villa A",
-    color: "rgba(188, 140, 34, 0.69)",
+    id: 'villa-a',
+    name: 'Villa A',
+    color: 'rgba(188, 140, 34, 0.69)',
     area: {
-      x: -50,
-      y: -55,
-      width: 1800,
-      height: 1000,
-      rotation: -6.5,
+      x: 220,
+      y: 1900,
+      width: 1400,
+      height: 1300,
+      rotation: 0,
       clipPath:
-        "polygon(6% 67%, 18% 100%, 32% 100%, 37% 96%, 31% 79%, 26% 71%, 26% 71%, 21% 59%, 21% 57%, 19% 51%, 18% 53%, 17% 50%, 12% 55%, 9% 59%, 10% 64%);",
+        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
     },
   },
 ];
@@ -46,9 +46,9 @@ const CanvasPropertyMask: React.FC = () => {
   const getPolygonPoints = (clipPath: string, unit: Unit, scale: number) => {
     return clipPath
       .match(/polygon\((.*?)\)/)?.[1]
-      .split(",")
+      .split(',')
       .map((point) => {
-        const [x, y] = point.trim().split(" ");
+        const [x, y] = point.trim().split(' ');
         return {
           x: (parseFloat(x) / 100) * unit.area.width * scale,
           y: (parseFloat(y) / 100) * unit.area.height * scale,
@@ -111,7 +111,7 @@ const CanvasPropertyMask: React.FC = () => {
   // Load and initialize image
   useEffect(() => {
     const image = imageRef.current;
-    image.src = "/master.png";
+    image.src = '/master-1.jpg';
     image.onload = () => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
@@ -141,7 +141,7 @@ const CanvasPropertyMask: React.FC = () => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const container = canvas.parentElement;
     if (!ctx || !container) return;
 
@@ -189,7 +189,7 @@ const CanvasPropertyMask: React.FC = () => {
             const baseColor = unit.color;
             const color =
               hoveredUnit === unit.id
-                ? baseColor.replace(/[\d.]+\)$/, "0.4)") // Reduce opacity when hovered
+                ? baseColor.replace(/[\d.]+\)$/, '0.4)') // Reduce opacity when hovered
                 : baseColor;
 
             ctx.fillStyle = color;
@@ -323,7 +323,7 @@ const CanvasPropertyMask: React.FC = () => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -339,8 +339,8 @@ const CanvasPropertyMask: React.FC = () => {
             key={unit.id}
             className={`w-full px-4 py-2 text-left rounded-lg transition-colors ${
               selectedUnit === unit.id
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 hover:bg-gray-200"
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 hover:bg-gray-200'
             }`}
             onClick={() =>
               setSelectedUnit(unit.id === selectedUnit ? null : unit.id)
