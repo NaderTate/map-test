@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface Unit {
   id: string;
@@ -16,17 +16,17 @@ interface Unit {
 
 const units: Unit[] = [
   {
-    id: 'villa-a',
-    name: 'Villa A',
-    color: 'rgba(188, 140, 34, 0.69)',
+    id: "villa-a",
+    name: "Villa A",
+    color: "rgba(188, 140, 34, 0.69)",
     area: {
-      x: 220,
+      x: 230,
       y: 1900,
       width: 1400,
       height: 1300,
       rotation: 0,
       clipPath:
-        'polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);',
+        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
     },
   },
 ];
@@ -46,9 +46,9 @@ const CanvasPropertyMask: React.FC = () => {
   const getPolygonPoints = (clipPath: string, unit: Unit, scale: number) => {
     return clipPath
       .match(/polygon\((.*?)\)/)?.[1]
-      .split(',')
+      .split(",")
       .map((point) => {
-        const [x, y] = point.trim().split(' ');
+        const [x, y] = point.trim().split(" ");
         return {
           x: (parseFloat(x) / 100) * unit.area.width * scale,
           y: (parseFloat(y) / 100) * unit.area.height * scale,
@@ -111,7 +111,7 @@ const CanvasPropertyMask: React.FC = () => {
   // Load and initialize image
   useEffect(() => {
     const image = imageRef.current;
-    image.src = '/master-1.jpg';
+    image.src = "/master-1.jpg";
     image.onload = () => {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
@@ -135,13 +135,76 @@ const CanvasPropertyMask: React.FC = () => {
       setIsLoaded(true);
     };
   }, []);
+  interface OpacityAnimation {
+    startTime: number;
+    startOpacity: number;
+    targetOpacity: number;
+    duration: number;
+  }
+
+  const ANIMATION_DURATION = 200; // Animation duration in milliseconds
+  const DEFAULT_OPACITY = 0.69; // Your default opacity
+  const HOVER_OPACITY = 0.4; // Your target hover opacity
+
+  // Add these state variables to your component
+  const [currentOpacity, setCurrentOpacity] = useState(DEFAULT_OPACITY);
+  const animationRef = useRef<number>();
+  const animationState = useRef<OpacityAnimation | null>(null);
+
+  // Add this animation function to your component
+  const animateOpacity = useCallback((timestamp: number) => {
+    if (!animationState.current) return;
+
+    const { startTime, startOpacity, targetOpacity, duration } =
+      animationState.current;
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // Ease the animation with a simple easing function
+    const easeProgress =
+      progress < 0.5
+        ? 2 * progress * progress
+        : -1 + (4 - 2 * progress) * progress;
+
+    const newOpacity =
+      startOpacity + (targetOpacity - startOpacity) * easeProgress;
+    setCurrentOpacity(newOpacity);
+
+    if (progress < 1) {
+      animationRef.current = requestAnimationFrame(animateOpacity);
+    }
+  }, []);
+
+  // Add this effect to handle hover state changes
+  useEffect(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+
+    const targetOpacity = hoveredUnit ? HOVER_OPACITY : DEFAULT_OPACITY;
+
+    animationState.current = {
+      startTime: performance.now(),
+      startOpacity: currentOpacity,
+      targetOpacity,
+      duration: ANIMATION_DURATION,
+    };
+
+    animationRef.current = requestAnimationFrame(animateOpacity);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [hoveredUnit, animateOpacity]);
 
   // Draw function
   useEffect(() => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const container = canvas.parentElement;
     if (!ctx || !container) return;
 
@@ -185,14 +248,17 @@ const CanvasPropertyMask: React.FC = () => {
             });
             ctx.closePath();
 
-            // Adjust opacity if unit is hovered
-            const baseColor = unit.color;
-            const color =
-              hoveredUnit === unit.id
-                ? baseColor.replace(/[\d.]+\)$/, '0.4)') // Reduce opacity when hovered
-                : baseColor;
+            // Use the animated opacity
+            const baseColorMatch = unit.color.match(
+              /^rgba\((\d+),\s*(\d+),\s*(\d+)/
+            );
+            if (baseColorMatch) {
+              const [_, r, g, b] = baseColorMatch;
+              ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${currentOpacity})`;
+            } else {
+              ctx.fillStyle = unit.color;
+            }
 
-            ctx.fillStyle = color;
             ctx.fill();
           }
         }
@@ -200,7 +266,7 @@ const CanvasPropertyMask: React.FC = () => {
         ctx.restore();
       }
     });
-  }, [isLoaded, offset, scale, selectedUnit, hoveredUnit]);
+  }, [isLoaded, offset, scale, selectedUnit, hoveredUnit, currentOpacity]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
@@ -323,7 +389,7 @@ const CanvasPropertyMask: React.FC = () => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -339,8 +405,8 @@ const CanvasPropertyMask: React.FC = () => {
             key={unit.id}
             className={`w-full px-4 py-2 text-left rounded-lg transition-colors ${
               selectedUnit === unit.id
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 hover:bg-gray-200'
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 hover:bg-gray-200"
             }`}
             onClick={() =>
               setSelectedUnit(unit.id === selectedUnit ? null : unit.id)
