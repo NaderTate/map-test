@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 
 interface Unit {
   id: string;
@@ -496,6 +497,50 @@ const CanvasPropertyMask: React.FC = () => {
         onWheel={handleWheel}
         onClick={handleCanvasClick}
       />
+      {selectedUnit && (
+        <Card className="absolute bottom-4 left-4 w-80 bg-white/90 backdrop-blur-sm shadow-xl">
+          <CardHeader className="pb-2">
+            <CardTitle>
+              {units.find((u) => u.id === selectedUnit)?.name}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">Dimensions</span>
+                <span className="font-medium">
+                  {units.find((u) => u.id === selectedUnit)?.area.width} x{' '}
+                  {units.find((u) => u.id === selectedUnit)?.area.height} m²
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedUnit(null);
+                  // Reset view
+                  const canvas = canvasRef.current;
+                  const image = imageRef.current;
+                  if (canvas && image) {
+                    const newScale = calculateCoverScale(
+                      image.width,
+                      image.height,
+                      canvas.width,
+                      canvas.height
+                    );
+                    setScale(newScale);
+                    const centerX = (canvas.width - image.width * newScale) / 2;
+                    const centerY =
+                      (canvas.height - image.height * newScale) / 2;
+                    setOffset({ x: centerX, y: centerY });
+                  }
+                }}
+                className="w-full mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
+              >
+                Reset View
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       <div className=" mt-4 space-y-2">
         <div className="font-medium text-lg mb-2">Units Filter</div>
         {units.map((unit) => (
