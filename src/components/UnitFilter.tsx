@@ -1,23 +1,8 @@
-import React, { useState } from "react";
-import { Switch } from "./ui/switch";
-import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { ChevronDown } from "lucide-react";
-
-interface Unit {
-  id: string;
-  name: string;
-  color: string;
-  groupId?: string;
-  area: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    rotation: number;
-    clipPath: string;
-  };
-}
+import React, { useState } from 'react';
+import { Switch } from './ui/switch';
+import { Card, CardContent } from './ui/card';
+import { Badge } from './ui/badge';
+import { ChevronDown } from 'lucide-react';
 
 interface UnitsFilterProps {
   units: Unit[];
@@ -39,7 +24,7 @@ const UnitsFilter: React.FC<UnitsFilterProps> = ({
 
   // Count units in each group
   const groupCounts = groups.reduce((acc, groupId) => {
-    acc[groupId || ""] = units.filter(
+    acc[groupId || ''] = units.filter(
       (unit) => unit.groupId === groupId
     ).length;
     return acc;
@@ -54,7 +39,7 @@ const UnitsFilter: React.FC<UnitsFilterProps> = ({
         <span className="font-medium">Units Filter</span>
         <ChevronDown
           className={`w-5 h-5 transition-transform duration-200 ${
-            isExpanded ? "rotate-180" : ""
+            isExpanded ? 'rotate-180' : ''
           }`}
         />
       </button>
@@ -63,8 +48,8 @@ const UnitsFilter: React.FC<UnitsFilterProps> = ({
         <CardContent className="bg-white p-4">
           <div className="space-y-3">
             {groups.map((groupId) => {
-              const isVisible = visibleGroups.includes(groupId || "");
-              const unitCount = groupCounts[groupId || ""];
+              const isVisible = visibleGroups.includes(groupId || '');
+              const unitCount = groupCounts[groupId || ''];
 
               return (
                 <div
@@ -75,14 +60,14 @@ const UnitsFilter: React.FC<UnitsFilterProps> = ({
                     <span className="font-medium text-gray-700">{groupId}</span>
                     <div className="flex items-center space-x-2">
                       <Badge variant="secondary" className="text-xs">
-                        {unitCount} {unitCount === 1 ? "unit" : "units"}
+                        {unitCount} {unitCount === 1 ? 'unit' : 'units'}
                       </Badge>
                     </div>
                   </div>
                   <Switch
                     checked={isVisible}
-                    onCheckedChange={() => onToggleGroup(groupId || "")}
-                    className="data-[state=checked]:bg-blue-600"
+                    onCheckedChange={() => onToggleGroup(groupId || '')}
+                    className="data-[state=checked]:bg-gray-600"
                   />
                 </div>
               );

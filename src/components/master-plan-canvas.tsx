@@ -1,100 +1,42 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
-import UnitsFilter from "./UnitFiler";
-import { Link } from "react-router-dom";
-
-interface Unit {
-  id: string;
-  name: string;
-  color: string;
-  groupId?: string; // Optional group identifier
-  area: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    rotation?: number;
-    clipPath?: string;
-  };
-}
-
-const units: Unit[] = [
-  {
-    id: "villa-a",
-    name: "Villa A",
-    color: "rgba(188, 140, 34, 0.69)",
-    groupId: "single-1",
-
-    area: {
-      x: 230,
-      y: 1900,
-      width: 1400,
-      height: 1300,
-      rotation: 0,
-      clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
-    },
-  },
-  {
-    id: "villa-b",
-    name: "Villa B",
-    color: "rgba(157, 115, 113, 0.69)",
-    groupId: "combined-1",
-    area: {
-      x: 2500,
-      y: 1000,
-      width: 1000,
-      height: 900,
-      rotation: 0,
-      clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
-    },
-  },
-  {
-    id: "villa-c",
-    name: "Villa C",
-    color: "rgba(163, 123, 102, 0.69)",
-    groupId: "combined-1",
-    area: {
-      x: 2000,
-      y: 1300,
-      width: 1400,
-      height: 1300,
-      rotation: 0,
-      clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
-    },
-  },
-  {
-    id: "villa-d",
-    name: "Villa D",
-    color: "rgba(43, 43, 196, 0.69)",
-    groupId: "single-2",
-    area: {
-      x: 1000,
-      y: 1300,
-      width: 1000,
-      height: 1000,
-      rotation: 0,
-      clipPath:
-        "polygon(, 1% 31%1% 31%, 51% 97%, 51% 97%, 91% 73%, 91% 73%, 37% 10%, 37% 10%, 35% 11%, 35% 11%, 32% 8%, 32% 8%, 18% 14%, 18% 14%, 18% 14%, 18% 14%, 9% 19%, 9% 19%, 10% 26%, 10% 26%, 4% 28%, 4% 28%);",
-    },
-  },
-];
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import UnitsFilter from './UnitFilter';
+import { Link } from 'react-router-dom';
+import { useCanvas } from '../hooks/useCanvas';
+import { units } from '../data/units';
 
 const CanvasPropertyMask: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imageRef = useRef<HTMLImageElement>(new Image());
+  const {
+    canvasRef,
+    imageRef,
+    isLoaded,
+    isDragging,
+    setIsDragging,
+    offset,
+    setOffset,
+    scale,
+    setScale,
+    dragStart,
+    handleMouseDown,
+    handleMouseUp,
+    handleWheel,
+    getBoundedOffset,
+    calculateCoverScale,
+  } = useCanvas({
+    imageSrc: '/master-1.jpg',
+  });
+
   const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
   const [hoveredUnit, setHoveredUnit] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState(1);
   const [isZooming, setIsZooming] = useState(false);
   const [visibleGroups, setVisibleGroups] = useState<string[]>(
-    Array.from(new Set(units.map((unit) => unit.groupId).filter(Boolean)))
+    Array.from(
+      new Set(
+        units
+          .map((unit) => unit.groupId)
+          .filter((id): id is string => id !== undefined)
+      )
+    )
   );
 
   const handleToggleGroup = (groupId: string) => {
@@ -160,7 +102,14 @@ const CanvasPropertyMask: React.FC = () => {
           startOffset.y + (targetY - startOffset.y) * easeProgress;
 
         setScale(currentScale);
-        setOffset(getBoundedOffset({ x: currentX, y: currentY }, currentScale));
+        setOffset(
+          getBoundedOffset(
+            { x: currentX, y: currentY },
+            currentScale,
+            canvas,
+            image
+          )
+        );
 
         if (progress < 1) {
           zoomAnimationRef.current = requestAnimationFrame(animate);
@@ -178,13 +127,22 @@ const CanvasPropertyMask: React.FC = () => {
     [scale, offset]
   );
 
+  // Add cleanup for zoom animation
+  useEffect(() => {
+    return () => {
+      if (zoomAnimationRef.current) {
+        cancelAnimationFrame(zoomAnimationRef.current);
+      }
+    };
+  }, []);
+
   // Helper function to convert clip-path polygon to points
   const getPolygonPoints = (clipPath: string, unit: Unit, scale: number) => {
     return clipPath
       .match(/polygon\((.*?)\)/)?.[1]
-      .split(",")
+      .split(',')
       .map((point) => {
-        const [x, y] = point.trim().split(" ");
+        const [x, y] = point.trim().split(' ');
         return {
           x: (parseFloat(x) / 100) * unit.area.width * scale,
           y: (parseFloat(y) / 100) * unit.area.height * scale,
@@ -231,46 +189,6 @@ const CanvasPropertyMask: React.FC = () => {
 
     return inside;
   };
-
-  // Calculate scale to cover entire screen
-  const calculateCoverScale = (
-    imageWidth: number,
-    imageHeight: number,
-    containerWidth: number,
-    containerHeight: number
-  ) => {
-    const widthScale = containerWidth / imageWidth;
-    const heightScale = containerHeight / imageHeight;
-    return Math.max(widthScale, heightScale);
-  };
-
-  // Load and initialize image
-  useEffect(() => {
-    const image = imageRef.current;
-    image.src = "/master-1.jpg";
-    image.onload = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        const container = canvas.parentElement;
-        if (container) {
-          const newScale = calculateCoverScale(
-            image.width,
-            image.height,
-            container.clientWidth,
-            container.clientHeight
-          );
-          setScale(newScale);
-
-          const scaledWidth = image.width * newScale;
-          const scaledHeight = image.height * newScale;
-          const centerX = (container.clientWidth - scaledWidth) / 2;
-          const centerY = (container.clientHeight - scaledHeight) / 2;
-          setOffset({ x: centerX, y: centerY });
-        }
-      }
-      setIsLoaded(true);
-    };
-  }, []);
 
   interface OpacityAnimation {
     startTime: number;
@@ -341,7 +259,7 @@ const CanvasPropertyMask: React.FC = () => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     const container = canvas.parentElement;
     if (!ctx || !container) return;
 
@@ -416,15 +334,9 @@ const CanvasPropertyMask: React.FC = () => {
     hoveredUnit,
     currentOpacity,
     visibleGroups,
+    canvasRef,
+    imageRef,
   ]);
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setDragStart({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
-    });
-  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
@@ -432,7 +344,12 @@ const CanvasPropertyMask: React.FC = () => {
         x: e.clientX - dragStart.x,
         y: e.clientY - dragStart.y,
       };
-      const boundedOffset = getBoundedOffset(newOffset);
+      const boundedOffset = getBoundedOffset(
+        newOffset,
+        scale,
+        canvasRef.current!,
+        imageRef.current
+      );
       setOffset(boundedOffset);
     } else {
       // Check for hover within polygon
@@ -459,33 +376,9 @@ const CanvasPropertyMask: React.FC = () => {
     }
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
   const handleMouseLeave = () => {
     setIsDragging(false);
     setHoveredUnit(null);
-  };
-
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
-
-    const canvas = canvasRef.current;
-    const image = imageRef.current;
-    if (!canvas || !image) return;
-
-    const minScale = calculateCoverScale(
-      image.width,
-      image.height,
-      canvas.width,
-      canvas.height
-    );
-
-    const newScale = Math.min(Math.max(minScale, scale * zoomFactor), 5);
-    setScale(newScale);
-    setOffset(getBoundedOffset(offset, newScale));
   };
 
   const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
@@ -512,50 +405,21 @@ const CanvasPropertyMask: React.FC = () => {
       setSelectedUnit(clickedUnit.id);
       zoomToUnit(clickedUnit);
     } else if (selectedUnit) {
-      // Reset zoom when clicking outside
-      setSelectedUnit(null);
-      zoomToUnit({
-        ...units[0],
-        area: {
-          x: 0,
-          y: 0,
-          width: imageRef.current?.width || 1,
-          height: imageRef.current?.height || 1,
-        },
-      });
+      handleResetView();
     }
   };
 
-  // Add cleanup for zoom animation
-  useEffect(() => {
-    return () => {
-      if (zoomAnimationRef.current) {
-        cancelAnimationFrame(zoomAnimationRef.current);
-      }
-    };
-  }, []);
-
-  const getBoundedOffset = (
-    newOffset: { x: number; y: number },
-    currentScale = scale
-  ) => {
-    if (!canvasRef.current || !imageRef.current) return newOffset;
-
-    const canvas = canvasRef.current;
-    const image = imageRef.current;
-
-    const scaledWidth = image.width * currentScale;
-    const scaledHeight = image.height * currentScale;
-
-    const minX = Math.min(0, canvas.width - scaledWidth);
-    const minY = Math.min(0, canvas.height - scaledHeight);
-    const maxX = Math.max(0, canvas.width - scaledWidth);
-    const maxY = Math.max(0, canvas.height - scaledHeight);
-
-    return {
-      x: Math.min(maxX, Math.max(minX, newOffset.x)),
-      y: Math.min(maxY, Math.max(minY, newOffset.y)),
-    };
+  const handleResetView = () => {
+    setSelectedUnit(null);
+    zoomToUnit({
+      ...units[0],
+      area: {
+        x: 0,
+        y: 0,
+        width: imageRef.current?.width || 1,
+        height: imageRef.current?.height || 1,
+      },
+    });
   };
 
   return (
@@ -563,7 +427,7 @@ const CanvasPropertyMask: React.FC = () => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? "cursor-grabbing" : "cursor-grab"
+          isDragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -572,16 +436,16 @@ const CanvasPropertyMask: React.FC = () => {
         onWheel={handleWheel}
         onClick={handleCanvasClick}
       />
-      <UnitsFilter
-        units={units}
-        visibleGroups={visibleGroups}
-        onToggleGroup={handleToggleGroup}
-      />
       <div className="bg-white absolute top-4 left-4  rounded-lg">
         <Link to="/">
           <img src="/logo.png" className="w-[50px]" />
         </Link>
       </div>
+      <UnitsFilter
+        units={units}
+        visibleGroups={visibleGroups}
+        onToggleGroup={handleToggleGroup}
+      />
       {selectedUnit && (
         <Card className="absolute bottom-4 left-4 w-80 bg-white/90 backdrop-blur-sm shadow-xl">
           <CardHeader className="pb-2">
@@ -594,30 +458,12 @@ const CanvasPropertyMask: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Dimensions</span>
                 <span className="font-medium">
-                  {units.find((u) => u.id === selectedUnit)?.area.width} x{" "}
+                  {units.find((u) => u.id === selectedUnit)?.area.width} x{' '}
                   {units.find((u) => u.id === selectedUnit)?.area.height} m²
                 </span>
               </div>
               <button
-                onClick={() => {
-                  setSelectedUnit(null);
-                  // Reset view
-                  const canvas = canvasRef.current;
-                  const image = imageRef.current;
-                  if (canvas && image) {
-                    const newScale = calculateCoverScale(
-                      image.width,
-                      image.height,
-                      canvas.width,
-                      canvas.height
-                    );
-                    setScale(newScale);
-                    const centerX = (canvas.width - image.width * newScale) / 2;
-                    const centerY =
-                      (canvas.height - image.height * newScale) / 2;
-                    setOffset({ x: centerX, y: centerY });
-                  }
-                }}
+                onClick={handleResetView}
                 className="w-full mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
               >
                 Reset View
@@ -626,24 +472,6 @@ const CanvasPropertyMask: React.FC = () => {
           </CardContent>
         </Card>
       )}
-      <div className=" mt-4 space-y-2">
-        <div className="font-medium text-lg mb-2">Units Filter</div>
-        {units.map((unit) => (
-          <button
-            key={unit.id}
-            className={`w-full px-4 py-2 text-left rounded-lg transition-colors ${
-              selectedUnit === unit.id
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 hover:bg-gray-200"
-            }`}
-            onClick={() =>
-              setSelectedUnit(unit.id === selectedUnit ? null : unit.id)
-            }
-          >
-            {unit.name}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };

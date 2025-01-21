@@ -25,7 +25,7 @@ const AppLayout = () => {
       {/* Floating fullscreen button */}
       <button
         onClick={toggleFullscreen}
-        className="fixed bottom-4 right-4 p-3 bg-black hover:bg-gray-800 text-white rounded-full shadow-lg transition-colors"
+        className="fixed bottom-4 right-4 p-3 bg-black hover:bg-gray-900 text-white rounded-full shadow-lg transition-colors"
         aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       >
         {isFullscreen ? (

@@ -17,9 +17,7 @@ function App() {
       <Route path="/" element={<AppLayout />}>
         <Route
           path="/"
-          element={
-            <DraggableMap mapImageUrl="https://images4.imagebam.com/f4/e0/5d/MEZ040L_o.jpg" />
-          }
+          element={<DraggableMap mapImageUrl="map.png" />}
         ></Route>
         <Route path="/3d" element={<Building />}></Route>
         <Route path="/dt" element={<DigitalTwinViewer />}></Route>
