@@ -18,7 +18,7 @@ const AppLayout = () => {
   return (
     <div className="min-h-screen relative">
       {/* Main content */}
-      <main className="p-4">
+      <main>
         <Outlet />
       </main>
 

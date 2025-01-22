@@ -13,6 +13,7 @@ export const useCanvas = ({ imageSrc }: UseCanvasProps) => {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
+  const [coordinates, setCoordinates] = useState<Point | null>(null);
 
   // Load image and set initial scale/offset
   useEffect(() => {
@@ -87,21 +88,40 @@ export const useCanvas = ({ imageSrc }: UseCanvasProps) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
+    const canvas = canvasRef.current;
+    const image = imageRef.current;
+    if (!canvas || !image) return;
 
-    const newOffset = {
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y,
-    };
+    // Get mouse position relative to canvas
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
-    // Apply bounds checking
-    const boundedOffset = getBoundedOffset(
-      newOffset,
-      scale,
-      canvasRef.current!,
-      imageRef.current
-    );
-    setOffset(boundedOffset);
+    // Calculate relative coordinates (0-1)
+    const relativeX = (mouseX - offset.x) / (image.width * scale);
+    const relativeY = (mouseY - offset.y) / (image.height * scale);
+
+    // Update coordinates if within bounds
+    if (relativeX >= 0 && relativeX <= 1 && relativeY >= 0 && relativeY <= 1) {
+      setCoordinates({
+        x: Number(relativeX.toFixed(2)),
+        y: Number(relativeY.toFixed(2)),
+      });
+    } else {
+      setCoordinates(null);
+    }
+
+    // Handle dragging logic
+    if (isDragging) {
+      const newOffset = {
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      };
+
+      // Apply bounds checking
+      const boundedOffset = getBoundedOffset(newOffset, scale, canvas, image);
+      setOffset(boundedOffset);
+    }
   };
 
   const handleMouseUp = () => {
@@ -146,5 +166,6 @@ export const useCanvas = ({ imageSrc }: UseCanvasProps) => {
     handleWheel,
     getBoundedOffset,
     calculateCoverScale,
+    coordinates,
   };
 };

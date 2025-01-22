@@ -10,6 +10,7 @@ import Building from './components/Building';
 import DigitalTwinViewer from './components/digital-twin-viewer';
 import CanvasPropertyMask from './components/master-plan-canvas';
 import AppLayout from './components/AppLayout';
+import CustomMap from './components/googleMap';
 
 function App() {
   const router = createBrowserRouter(
@@ -17,8 +18,9 @@ function App() {
       <Route path="/" element={<AppLayout />}>
         <Route
           path="/"
-          element={<DraggableMap mapImageUrl="map.png" />}
+          element={<DraggableMap mapImageUrl="map.svg" />}
         ></Route>
+        <Route path="/map" element={<CustomMap />}></Route>
         <Route path="/3d" element={<Building />}></Route>
         <Route path="/dt" element={<DigitalTwinViewer />}></Route>
         <Route

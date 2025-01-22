@@ -4,7 +4,7 @@ export const usePathAnimation = () => {
   const [pathProgress, setPathProgress] = useState(0);
   const animationFrameRef = useRef<number>();
 
-  const animatePath = (path: PathPoint[], startTime: number) => {
+  const animatePath = (path: Point[], startTime: number) => {
     const animationDuration = 1000;
     const now = performance.now();
     const elapsed = now - startTime;
