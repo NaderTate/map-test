@@ -1,109 +1,129 @@
-const locationCoordinates = {
+const locationCoordinates: { [key: string]: LocationPoint } = {
   kingKhalidAirport: {
     id: 2,
     lat: 24.948973389722692,
     lng: 46.706085185921395,
     name: 'King Khalid International Airport',
+    arabicName: 'مطار الملك خالد الدولي',
   },
   nakhilMall: {
     id: 1,
     lat: 24.768176783655672,
     lng: 46.71496818214427,
     name: 'Al Nakheel Mall',
+    arabicName: 'النخيل مول',
   },
   imamMuhammadIbnSaudIslamicUniversity: {
     id: 3,
     lat: 24.807712154632735,
     lng: 46.69827290028991,
     name: 'Imam Muhammad Ibn Saud Islamic University',
+    arabicName: 'جامعة الإمام محمد بن سعود الإسلامية',
   },
   kingSaudUniversity: {
     id: 14,
     lat: 24.72274581839499,
     lng: 46.62657600709686,
     name: 'King Saud University',
+    arabicName: 'جامعة الملك سعود',
   },
   kingAbdullahFinancialDistrict: {
     id: 9,
     lat: 24.764887289448538,
     lng: 46.64039260844531,
     name: 'King Abdullah Financial District',
+    arabicName: 'مركز الملك عبد الله المالي',
   },
   boulevardCity: {
     id: 10,
     lat: 24.769543330267204,
     lng: 46.60455140436387,
     name: 'Boulevard City',
+    arabicName: 'البوليفارد',
   },
   alnozhaSubwayStation: {
     id: 4,
     lat: 24.749696500721647,
     lng: 46.71235235822644,
     name: 'Al Nozha Subway Station',
+    arabicName: 'محطة مترو النزهة',
   },
   almuroojSubwayStation: {
     id: 5,
     lat: 24.75542356096782,
     lng: 46.654588377753015,
     name: 'Al Murooj Subway Station',
+    arabicName: 'محطة مترو المروج',
   },
   khalidBinWaleedRoadSubwayStation: {
     id: 6,
     lat: 24.770522047170132,
     lng: 46.758738338782955,
     name: 'Khalid Bin Waleed Road Subway Station',
+    arabicName: 'محطة مترو طريق خالد بن الوليد',
   },
   othmanBinAffanRoadSubwayStation: {
     id: 7,
     lat: 24.803275220114312,
     lng: 46.69587860860658,
     name: 'Othman Bin Affan Road Subway Station',
+    arabicName: 'محطة مترو طريق عثمان بن عفان',
   },
   drSolimanAlhabibSubwayStation: {
     id: 8,
     lat: 24.813022809170693,
     lng: 46.625406817910026,
     name: 'Dr. Soliman Al-Habib Subway Station',
+    arabicName: 'محطة مترو د. سليمان الحبيب',
   },
   aladalusSubwayStation: {
     id: 11,
     lat: 24.75795346065773,
     lng: 46.790261092158055,
     name: 'Al-Andalus Subway Station',
+    arabicName: 'محطة مترو الأندلس',
   },
   almalazSubwayStation: {
     id: 12,
     lat: 24.662282961630947,
     lng: 46.74463294927491,
     name: 'Al Malaz Subway Station',
+    arabicName: 'محطة مترو الملز',
   },
   khuraisSubwayStation: {
     id: 13,
     lat: 24.742509891658415,
     lng: 46.798894561335054,
     name: 'Khurais Subway Station',
+    arabicName: 'محطة مترو الخريص',
   },
   haronAlrasheedRoadSubwayStation: {
     id: 15,
     lat: 24.688219678791587,
     lng: 46.7958194016995,
     name: 'Haron Al-Rasheed Road Subway Station',
+    arabicName: 'محطة مترو طريق هارون الرشيد',
   },
   jarirDistrictSubwayStation: {
     id: 16,
     lat: 24.673349870919306,
     lng: 46.76043899577105,
     name: 'Jarir District Subway Station',
+    arabicName: 'محطة مترو حي جرير',
   },
 };
 
-export const startPoints: StartPoint[] = [
+export const imageBaseUrl = (name: string) =>
+  `https://firebasestorage.googleapis.com/v0/b/wessal.appspot.com/o/aleen-interactive-map%2F${name}?alt=media&token=640a155b-7ba1-4386-b5e8-752925e71498`;
+
+export const projects: Project[] = [
   {
     id: 'alNuzha80',
     lat: 24.761655878578935,
     lng: 46.7087903846558,
     name: 'Al Nuzha 80',
-    color: '#009a43',
+    arabicName: 'النزهة 80',
+    imageUrl: imageBaseUrl('80.png'),
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.nakhilMall,
@@ -113,9 +133,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alMurooj78',
     name: 'Al Murooj 78',
+    arabicName: 'المروج 78',
+    imageUrl: imageBaseUrl('78.jpg'),
     lat: 24.761766022976122,
     lng: 46.65769974019941,
-    color: '#fcb827',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -125,9 +146,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alezdihar74',
     name: 'Al Ezdihar 74',
+    arabicName: 'الازدهار 74',
+    imageUrl: imageBaseUrl('74.jpg'),
     lat: 24.775892021296617,
     lng: 46.722553138347585,
-    color: '#00a3e0',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -137,9 +159,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alwadi84',
     name: 'Al Wadi 84',
+    arabicName: 'الوادي 84',
+    imageUrl: imageBaseUrl('84.jpg'),
     lat: 24.7919008,
     lng: 46.6900424,
-    color: '#f26522',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.kingSaudUniversity,
@@ -149,9 +172,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alezdihar88',
     name: 'Al Ezdihar 88',
+    arabicName: 'الازدهار 88',
+    imageUrl: imageBaseUrl('88.jpg'),
     lat: 24.77875936642475,
     lng: 46.72551887367969,
-    color: '#00a3e0',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -161,22 +185,23 @@ export const startPoints: StartPoint[] = [
   {
     id: 'kingFeisal90',
     name: 'King Feisal 90',
+    arabicName: 'الملك فيصل 90',
+    imageUrl: imageBaseUrl('90.jpg'),
     lat: 24.762995250281943,
     lng: 46.781964096295326,
-    color: '#fcb827',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
-      // locationCoordinates.khalidBinWaleedRoadSubwayStation,
       locationCoordinates.aladalusSubwayStation,
     ],
   },
   {
     id: 'almgharzat96',
     name: 'Al Mgharzat 96',
+    arabicName: 'المغرزات 96',
+    imageUrl: imageBaseUrl('96.png'),
     lat: 24.769634002922153,
     lng: 46.72298295767209,
-    color: '#009a43',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -186,9 +211,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alaqiq98',
     name: 'Al Aqiq 98',
+    arabicName: 'العقيق 98',
+    imageUrl: imageBaseUrl('98.png'),
     lat: 24.79079928278308,
     lng: 46.63003067116396,
-    color: '#f26522',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -199,9 +225,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alaqiq100',
     name: 'Al Aqiq 100',
+    arabicName: 'العقيق 100',
+    imageUrl: imageBaseUrl('100.png'),
     lat: 24.788939810397,
     lng: 46.625991988360475,
-    color: '#f26522',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -212,9 +239,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alaqiq102',
     name: 'Al Aqiq 102',
+    arabicName: 'العقيق 102',
+    imageUrl: imageBaseUrl('102.png'),
     lat: 24.772140756601466,
     lng: 46.6322626846558,
-    color: '#f26522',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -225,9 +253,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alaqiq114',
     name: 'Al Aqiq 114',
+    arabicName: 'العقيق 114',
+    imageUrl: imageBaseUrl('114.png'),
     lat: 24.769300939136546,
     lng: 46.62702796871715,
-    color: '#f26522',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -238,9 +267,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almgharzat104',
     name: 'Al Mgharzat 104',
+    arabicName: 'المغرزات 104',
+    imageUrl: imageBaseUrl('104.jpg'),
     lat: 24.765096158557963,
     lng: 46.73185766441802,
-    color: '#009a43',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -250,9 +280,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alrawdah106',
     name: 'Al Rawdah 106',
+    arabicName: 'الروضة 106',
+    imageUrl: imageBaseUrl('106.jpg'),
     lat: 24.74542513587728,
     lng: 46.775053245369165,
-    color: '#009a43',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -262,9 +293,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almalaz108',
     name: 'Al Malaz 108',
+    arabicName: 'الملز 108',
+    imageUrl: imageBaseUrl('108.png'),
     lat: 24.661381422862743,
     lng: 46.730186640337685,
-    color: '#ffaacc',
     locations: [
       locationCoordinates.kingSaudUniversity,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -274,9 +306,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alfalah112',
     name: 'Al Falah 112',
+    arabicName: 'الفلاح 112',
+    imageUrl: imageBaseUrl('112.jpeg'),
     lat: 24.795384937384377,
     lng: 46.7035618423279,
-    color: '#fcb827',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -287,9 +320,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almanar116',
     name: 'Al Manar 116',
+    arabicName: 'المنار 116',
+    imageUrl: imageBaseUrl('116.jpeg'),
     lat: 24.73183107703207,
     lng: 46.79860987056949,
-    color: '#88ddff',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -299,9 +333,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almohammadiya118',
     name: 'Al Mohammadiya 118',
+    arabicName: 'المحمدية 118',
+    imageUrl: imageBaseUrl('118.png'),
     lat: 24.7289810095149,
     lng: 46.65663636931161,
-    color: '#009a99',
     locations: [
       locationCoordinates.boulevardCity,
       locationCoordinates.kingSaudUniversity,
@@ -311,9 +346,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almohammadiya120',
     name: 'Al Mohammadiya 120',
+    arabicName: 'المحمدية 120',
+    imageUrl: imageBaseUrl('120.jpg'),
     lat: 24.735167775678242,
     lng: 46.64217781163953,
-    color: '#009a99',
     locations: [
       locationCoordinates.boulevardCity,
       locationCoordinates.kingSaudUniversity,
@@ -323,9 +359,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'algadeer122',
     name: 'Al Gadeer 122',
+    arabicName: 'الغدير 122',
+    imageUrl: imageBaseUrl('122.jpeg'),
     lat: 24.77825728242579,
     lng: 46.65246970951152,
-    color: '#009a',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -335,9 +372,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'almursalat124',
     name: 'Al Mursalat 124',
+    arabicName: 'المرسلات 124',
+    imageUrl: imageBaseUrl('124.png'),
     lat: 24.750296330694116,
     lng: 46.69618445369093,
-    color: '#000eee',
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.kingSaudUniversity,
@@ -347,9 +385,10 @@ export const startPoints: StartPoint[] = [
   {
     id: 'alrawabi128',
     name: 'Al Rawabi 128',
+    arabicName: 'الروابي 128',
+    imageUrl: imageBaseUrl('128.jpg'),
     lat: 24.697378188109003,
     lng: 46.80562623599567,
-    color: '#ee9a43',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -357,11 +396,12 @@ export const startPoints: StartPoint[] = [
     ],
   },
   {
-    id: 'alrabwah130',
-    name: 'Al Rabwah 130',
+    id: 'alrabwah136',
+    name: 'Al Rabwah 136',
+    arabicName: 'الربوة 136',
+    imageUrl: imageBaseUrl('136.jpg'),
     lat: 24.692081265771705,
     lng: 46.75097879999999,
-    color: '#ee9a43',
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,

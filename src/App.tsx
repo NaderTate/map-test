@@ -5,7 +5,6 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from 'react-router-dom';
-import DraggableMap from './components/draggableMap';
 import Building from './components/Building';
 import DigitalTwinViewer from './components/digital-twin-viewer';
 import CanvasPropertyMask from './components/master-plan-canvas';
@@ -16,11 +15,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements([
       <Route path="/" element={<AppLayout />}>
-        <Route
-          path="/"
-          element={<DraggableMap mapImageUrl="map.svg" />}
-        ></Route>
-        <Route path="/map" element={<CustomMap />}></Route>
+        <Route path="/" element={<CustomMap />}></Route>
         <Route path="/3d" element={<Building />}></Route>
         <Route path="/dt" element={<DigitalTwinViewer />}></Route>
         <Route

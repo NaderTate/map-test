@@ -18,47 +18,35 @@ interface Point {
   y: number;
 }
 
-// interface LocationPoint {
-//   id: number;
-//   x: number;
-//   y: number;
-//   name: string;
-//   distance?: string;
-//   duration?: string;
-//   description?: string;
-//   color?: string;
-//   pathPoints?: PathPoint[];
-// }
+interface RouteInfo {
+  route: PathPoint[];
+  distance: string;
+  duration: string;
+}
 
-// interface StartPoint {
-//   id: string;
-//   x: number;
-//   y: number;
-//   name: string;
-//   color: string;
-//   locations: LocationPoint[];
-// }
+interface DirectionsResult {
+  routes: {
+    overview_path: google.maps.LatLng[];
+    legs: {
+      distance?: { text: string };
+      duration?: { text: string };
+    }[];
+  }[];
+}
 
-// interface LocationPoint {
-//   id: number;
-//   x: number;
-//   y: number;
-//   name: string;
-//   description?: string;
-//   distance?: string;
-//   duration?: string;
-//   color?: string;
-//   startPointId?: string;
-//   pathPoints?: Point[];
-// }
+type PathPoint = google.maps.LatLngLiteral;
 
-interface StartPoint {
+interface Project {
   id: string;
   lat: number;
   lng: number;
   name: string;
-  color: string;
+  arabicName: string;
+  color?: string;
   locations: LocationPoint[];
+  imageUrl?: string;
+  units?: number;
+  buildings?: number;
 }
 
 interface LocationPoint {
@@ -66,6 +54,7 @@ interface LocationPoint {
   lat: number;
   lng: number;
   name: string;
+  arabicName: string;
   color?: string;
   distance?: string;
   duration?: string;

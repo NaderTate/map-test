@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
 import { Link } from 'react-router-dom';
 import { useCanvas } from '../hooks/useCanvas';
 import { usePathAnimation } from '../hooks/usePathAnimation';
-import { startPoints } from '../data/locations';
+import { projects } from '../data/locations';
 
 import {
   drawConnectingLine,
@@ -19,7 +19,7 @@ const getCustomPath = (point: LocationPoint): Point[] => {
     return point.pathPoints;
   }
   // Get the correct start point based on startPointId
-  const startPoint = startPoints.find((sp) => sp.id === point.startPointId);
+  const startPoint = projects.find((sp) => sp.id === point.startPointId);
   if (!startPoint) return [];
   return [
     { x: startPoint.x, y: startPoint.y },
@@ -51,7 +51,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     null
   );
 
-  const [activeStartPoint, setActiveStartPoint] = useState<StartPoint | null>(
+  const [activeStartPoint, setActiveStartPoint] = useState<Project | null>(
     null
   );
 
@@ -120,7 +120,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     // drawGrid(ctx, offset, scale, scaledWidth, scaledHeight);
 
     // Draw start points
-    startPoints.forEach((startPoint) => {
+    projects.forEach((startPoint) => {
       const startX = offset.x + scaledWidth * startPoint.x;
       const startY = offset.y + scaledHeight * startPoint.y;
 
@@ -428,7 +428,7 @@ const CanvasMap = ({ mapImageUrl }: { mapImageUrl: string }) => {
     const scaledHeight = imageRef.current.height * scale;
 
     // Check for clicked start point first
-    const clickedStart = startPoints.find((point) => {
+    const clickedStart = projects.find((point) => {
       const pointX = offset.x + scaledWidth * point.x;
       const pointY = offset.y + scaledHeight * point.y;
       const distance = Math.sqrt(
