@@ -9,15 +9,15 @@
 export const drawGrid = (
   ctx: CanvasRenderingContext2D,
   offset: Point,
-  scale: number,
+
   scaledWidth: number,
   scaledHeight: number
 ) => {
   const gridSize = 0.01;
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-  ctx.font = '2px Arial';
-  ctx.textAlign = 'left';
+  ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+  ctx.font = "2px Arial";
+  ctx.textAlign = "left";
 
   // Draw vertical lines
   for (let x = 0; x <= 1; x += gridSize) {
@@ -83,7 +83,7 @@ export const drawStartPointCircles = (
   // Outer white circle
   ctx.beginPath();
   ctx.arc(x, y, 12, 0, Math.PI * 2);
-  ctx.fillStyle = '#000';
+  ctx.fillStyle = "#000";
   ctx.fill();
 
   // Colored ring
@@ -95,7 +95,7 @@ export const drawStartPointCircles = (
   // Inner white ring
   ctx.beginPath();
   ctx.arc(x, y, 6, 0, Math.PI * 2);
-  ctx.fillStyle = '#000';
+  ctx.fillStyle = "#000";
   ctx.fill();
 
   // Colored center
@@ -105,42 +105,14 @@ export const drawStartPointCircles = (
   ctx.fill();
 };
 
-export const drawLocationPoint = (
-  ctx: CanvasRenderingContext2D,
-  point: LocationPoint,
-  isSelected: boolean,
-  offset: Point,
-  scale: number,
-  scaledWidth: number,
-  scaledHeight: number
-) => {
-  const x = offset.x + scaledWidth * point.x;
-  const y = offset.y + scaledHeight * point.y;
-
-  // Outer white circle
-  ctx.beginPath();
-  ctx.arc(x, y, 10, 0, Math.PI * 2);
-  ctx.fillStyle = '#000';
-  ctx.fill();
-
-  // Inner colored circle
-  ctx.beginPath();
-  ctx.arc(x, y, 4, 0, Math.PI * 2);
-  ctx.fillStyle = isSelected ? '#ff0000' : point.color ? point.color : '#000';
-  ctx.fill();
-
-  // Draw label
-  drawLocationLabel(ctx, x, y, point.name);
-};
-
 export const drawLocationLabel = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
   text: string
 ) => {
-  ctx.font = '16px Arial';
-  ctx.textAlign = 'center';
+  ctx.font = "16px Arial";
+  ctx.textAlign = "center";
 
   // Calculate background dimensions
   const textMetrics = ctx.measureText(text);
@@ -150,7 +122,7 @@ export const drawLocationLabel = (
   const radius = 8;
 
   // Draw rounded rectangle background
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+  ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
   ctx.beginPath();
 
   // Top left corner
@@ -196,7 +168,7 @@ export const drawLocationLabel = (
   ctx.fill();
 
   // Draw text
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = "#ffffff";
   ctx.fillText(text, x, y - 35);
 };
 
