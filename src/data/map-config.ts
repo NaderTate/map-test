@@ -1,6 +1,6 @@
 export const mapContainerStyle = {
-  width: '100%',
-  height: '100%',
+  width: "100%",
+  height: "100%",
 };
 
 export const center = {
@@ -21,455 +21,455 @@ export const zoom = 13;
 
 export const customMapStyle = [
   {
-    featureType: 'administrative',
-    elementType: 'all',
+    featureType: "administrative",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
       {
-        hue: '#ff0000',
+        hue: "#ff0000",
       },
       {
-        gamma: '0.00',
+        gamma: "0.00",
       },
       {
-        lightness: '37',
+        lightness: "37",
       },
     ],
   },
   {
-    featureType: 'administrative',
-    elementType: 'geometry',
+    featureType: "administrative",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.country',
-    elementType: 'all',
+    featureType: "administrative.country",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.country',
-    elementType: 'geometry',
+    featureType: "administrative.country",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.country',
-    elementType: 'labels',
+    featureType: "administrative.country",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.country',
-    elementType: 'labels.icon',
+    featureType: "administrative.country",
+    elementType: "labels.icon",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.province',
-    elementType: 'all',
+    featureType: "administrative.province",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.province',
-    elementType: 'geometry',
+    featureType: "administrative.province",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.province',
-    elementType: 'labels',
+    featureType: "administrative.province",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.province',
-    elementType: 'labels.icon',
+    featureType: "administrative.province",
+    elementType: "labels.icon",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.locality',
-    elementType: 'all',
+    featureType: "administrative.locality",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.locality',
-    elementType: 'geometry',
+    featureType: "administrative.locality",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.locality',
-    elementType: 'labels',
+    featureType: "administrative.locality",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text',
+    featureType: "administrative.locality",
+    elementType: "labels.text",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.locality',
-    elementType: 'labels.icon',
+    featureType: "administrative.locality",
+    elementType: "labels.icon",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.neighborhood',
-    elementType: 'all',
+    featureType: "administrative.neighborhood",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.neighborhood',
-    elementType: 'labels.text',
+    featureType: "administrative.neighborhood",
+    elementType: "labels.text",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.neighborhood',
-    elementType: 'labels.icon',
+    featureType: "administrative.neighborhood",
+    elementType: "labels.icon",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'administrative.land_parcel',
-    elementType: 'all',
+    featureType: "administrative.land_parcel",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'administrative.land_parcel',
-    elementType: 'labels',
+    featureType: "administrative.land_parcel",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'landscape',
-    elementType: 'all',
+    featureType: "landscape",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'landscape.man_made',
-    elementType: 'geometry',
+    featureType: "landscape.man_made",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'landscape.natural',
-    elementType: 'all',
+    featureType: "landscape.natural",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'landscape.natural.landcover',
-    elementType: 'all',
+    featureType: "landscape.natural.landcover",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'poi',
-    elementType: 'all',
+    featureType: "poi",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'poi.medical',
-    elementType: 'all',
+    featureType: "poi.medical",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'all',
+    featureType: "road",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'geometry',
+    featureType: "road",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'simplified',
+        visibility: "simplified",
       },
       {
-        color: '#74243d',
+        color: "#74243d",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'geometry.fill',
+    featureType: "road",
+    elementType: "geometry.fill",
     stylers: [
       {
-        weight: '0.60',
+        weight: "0.60",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'geometry.stroke',
+    featureType: "road",
+    elementType: "geometry.stroke",
     stylers: [
       {
-        weight: '2.50',
+        weight: "2.50",
       },
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'labels',
+    featureType: "road",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'labels.text',
+    featureType: "road",
+    elementType: "labels.text",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.highway',
-    elementType: 'all',
+    featureType: "road.highway",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.highway',
-    elementType: 'geometry.stroke',
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.highway',
-    elementType: 'labels',
+    featureType: "road.highway",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.highway',
-    elementType: 'labels.text',
+    featureType: "road.highway",
+    elementType: "labels.text",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.highway.controlled_access',
-    elementType: 'all',
+    featureType: "road.highway.controlled_access",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'road.arterial',
-    elementType: 'all',
+    featureType: "road.arterial",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.arterial',
-    elementType: 'geometry',
+    featureType: "road.arterial",
+    elementType: "geometry",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
     ],
   },
   {
-    featureType: 'road.arterial',
-    elementType: 'geometry.stroke',
+    featureType: "road.arterial",
+    elementType: "geometry.stroke",
     stylers: [
       {
-        visibility: 'on',
+        visibility: "on",
       },
       {
-        gamma: '0.00',
+        gamma: "0.00",
       },
       {
-        weight: '0.01',
+        weight: "0.01",
       },
     ],
   },
   {
-    featureType: 'road.arterial',
-    elementType: 'labels',
+    featureType: "road.arterial",
+    elementType: "labels",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.local',
-    elementType: 'all',
+    featureType: "road.local",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.local',
-    elementType: 'geometry.stroke',
+    featureType: "road.local",
+    elementType: "geometry.stroke",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'road.local',
-    elementType: 'labels.text.stroke',
+    featureType: "road.local",
+    elementType: "labels.text.stroke",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'transit',
-    elementType: 'all',
+    featureType: "transit",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'transit',
-    elementType: 'geometry.stroke',
+    featureType: "transit",
+    elementType: "geometry.stroke",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'transit',
-    elementType: 'labels.text.stroke',
+    featureType: "transit",
+    elementType: "labels.text.stroke",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },
   {
-    featureType: 'transit.station.airport',
-    elementType: 'all',
+    featureType: "transit.station.airport",
+    elementType: "all",
     stylers: [
       {
-        visibility: 'off',
+        visibility: "off",
       },
     ],
   },

@@ -24,17 +24,17 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             <span className="block text-lg font-bold">
               {project.locations.length}
             </span>
-            <span className="text-xs text-gray-300">Nearby Locations</span>
+            <span className="text-xs text-gray-300">الاماكن القريبة</span>
           </div>
           {project.units && project.units > 0 ? (
             <div className="text-center">
               <span className="block text-lg font-bold">
                 {project.units || 0}
               </span>
-              <span className="text-xs text-gray-300">Total Units</span>
+              <span className="text-xs text-gray-300">عدد الوحدات</span>
             </div>
           ) : (
-            <span className="whitespace-nowrap"> Under Construction</span>
+            <span className="whitespace-nowrap"> تحت الانشاء</span>
           )}
 
           {project.buildings && (

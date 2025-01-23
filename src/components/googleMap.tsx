@@ -186,6 +186,7 @@ const CustomMap = () => {
     // Inner white circle
     context.beginPath();
     context.arc(centerX, size / 2, innerSize / 2 - 2, 0, Math.PI * 2);
+
     context.fillStyle = "#FFFFFF";
     context.fill();
 
@@ -245,7 +246,7 @@ const CustomMap = () => {
               d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
             />
           </svg>
-          Back to All Projects
+          العودة الي المشاريع
         </button>
       )}
 
@@ -257,6 +258,9 @@ const CustomMap = () => {
         zoom={currentZoom}
         center={center}
         options={{
+          minZoom: 13,
+          // maxZoom: 13,
+          // gestureHandling: "cooperative",
           styles: customMapStyle,
           restriction,
           disableDefaultUI: true,
@@ -327,7 +331,7 @@ const CustomMap = () => {
         <Polyline
           path={path}
           options={{
-            strokeColor: "#fff",
+            strokeColor: "#1bd64a",
             strokeWeight: 4,
             zIndex: 998,
           }}
