@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
-import UnitsFilter from './UnitFilter';
-import { Link } from 'react-router-dom';
-import { useCanvas } from '../hooks/useCanvas';
-import { units } from '../data/units';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import UnitsFilter from "./UnitFilter";
+import { Link } from "react-router-dom";
+import { useCanvas } from "../hooks/useCanvas";
+import { units } from "../data/units";
 
 const CanvasPropertyMask: React.FC = () => {
   const {
@@ -23,7 +23,7 @@ const CanvasPropertyMask: React.FC = () => {
     getBoundedOffset,
     calculateCoverScale,
   } = useCanvas({
-    imageSrc: '/master-1.jpg',
+    imageSrc: "/master-1.jpg",
   });
 
   const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
@@ -140,9 +140,9 @@ const CanvasPropertyMask: React.FC = () => {
   const getPolygonPoints = (clipPath: string, unit: Unit, scale: number) => {
     return clipPath
       .match(/polygon\((.*?)\)/)?.[1]
-      .split(',')
+      .split(",")
       .map((point) => {
-        const [x, y] = point.trim().split(' ');
+        const [x, y] = point.trim().split(" ");
         return {
           x: (parseFloat(x) / 100) * unit.area.width * scale,
           y: (parseFloat(y) / 100) * unit.area.height * scale,
@@ -259,7 +259,7 @@ const CanvasPropertyMask: React.FC = () => {
     if (!isLoaded || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const container = canvas.parentElement;
     if (!ctx || !container) return;
 
@@ -312,6 +312,7 @@ const CanvasPropertyMask: React.FC = () => {
                 /^rgba\((\d+),\s*(\d+),\s*(\d+)/
               );
               if (baseColorMatch) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const [_, r, g, b] = baseColorMatch;
                 ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${currentOpacity})`;
               }
@@ -427,7 +428,7 @@ const CanvasPropertyMask: React.FC = () => {
       <canvas
         ref={canvasRef}
         className={`w-full h-full ${
-          isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          isDragging ? "cursor-grabbing" : "cursor-grab"
         }`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -458,7 +459,7 @@ const CanvasPropertyMask: React.FC = () => {
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">Dimensions</span>
                 <span className="font-medium">
-                  {units.find((u) => u.id === selectedUnit)?.area.width} x{' '}
+                  {units.find((u) => u.id === selectedUnit)?.area.width} x{" "}
                   {units.find((u) => u.id === selectedUnit)?.area.height} m²
                 </span>
               </div>

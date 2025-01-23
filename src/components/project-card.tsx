@@ -7,31 +7,36 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     <div
       className="fixed bottom-4 left-4 w-80 h-60 rounded-lg overflow-hidden z-20"
       style={{
-        backgroundImage: `url(${project.imageUrl || '/default-location.jpg'})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundImage: `url(${project.imageUrl || "/default-location.jpg"})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
       {/* Content */}
-      <div className="relative h-full p-4 flex flex-col justify-end text-white">
+      <div className="relative h-full p-4 flex flex-col justify-end  text-white">
         <h3 className="text-xl font-bold mb-2">{project.arabicName}</h3>
 
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-3 items-center gap-4 mb-4">
           <div className="text-center">
             <span className="block text-lg font-bold">
               {project.locations.length}
             </span>
             <span className="text-xs text-gray-300">Nearby Locations</span>
           </div>
-          <div className="text-center">
-            <span className="block text-lg font-bold">
-              {project.units || 0}
-            </span>
-            <span className="text-xs text-gray-300">Total Units</span>
-          </div>
+          {project.units && project.units > 0 ? (
+            <div className="text-center">
+              <span className="block text-lg font-bold">
+                {project.units || 0}
+              </span>
+              <span className="text-xs text-gray-300">Total Units</span>
+            </div>
+          ) : (
+            <span className="whitespace-nowrap"> Under Construction</span>
+          )}
+
           {project.buildings && (
             <div className="text-center">
               <span className="block text-lg font-bold">

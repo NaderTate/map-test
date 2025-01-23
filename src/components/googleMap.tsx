@@ -1,24 +1,24 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   GoogleMap,
   MarkerF,
   useLoadScript,
   PolylineF as Polyline,
-} from '@react-google-maps/api';
-import ReactDOMServer from 'react-dom/server';
+} from "@react-google-maps/api";
+import ReactDOMServer from "react-dom/server";
 
-import ProjectCard from './project-card';
-import LocationCard from './location-card';
-import MapMarker from './map-marker';
+import ProjectCard from "./project-card";
+import LocationCard from "./location-card";
+import MapMarker from "./map-marker";
 
-import { projects } from '../data/locations';
+import { projects } from "../data/locations";
 import {
   customMapStyle,
   mapContainerStyle,
   zoom,
   restriction,
   center,
-} from '../data/map-config';
+} from "../data/map-config";
 
 const CustomMap = () => {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -40,7 +40,7 @@ const CustomMap = () => {
   });
 
   const handleLocationClick = (point: LocationPoint | Project) => {
-    if ('locations' in point) {
+    if ("locations" in point) {
       setActiveProject(point);
       setSelectedLocation(null);
       setShowAllProjects(false);
@@ -88,8 +88,8 @@ const CustomMap = () => {
           const leg = result.routes[0].legs[0];
           const routeInfo: RouteInfo = {
             route,
-            distance: leg.distance?.text || '',
-            duration: leg.duration?.text || '',
+            distance: leg.distance?.text || "",
+            duration: leg.duration?.text || "",
           };
 
           setSelectedLocation((prev) =>
@@ -150,8 +150,8 @@ const CustomMap = () => {
     const fontSize = 12;
 
     // Create canvas for marker and label
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
     if (!ctx) return undefined;
 
     // Set font for measuring text
@@ -165,7 +165,7 @@ const CustomMap = () => {
     canvas.height = totalHeight;
 
     // Re-get context after resize and set font again
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext("2d");
     if (!context) return undefined;
     context.font = `${fontSize}px Arial`;
 
@@ -174,32 +174,32 @@ const CustomMap = () => {
     // Outer white circle
     context.beginPath();
     context.arc(centerX, size / 2, size / 2, 0, Math.PI * 2);
-    context.fillStyle = '#FFFFFF';
+    context.fillStyle = "#FFFFFF";
     context.fill();
 
     // Middle colored circle
     context.beginPath();
     context.arc(centerX, size / 2, innerSize / 2, 0, Math.PI * 2);
-    context.fillStyle = point.color || '#000000';
+    context.fillStyle = point.color || "#000000";
     context.fill();
 
     // Inner white circle
     context.beginPath();
     context.arc(centerX, size / 2, innerSize / 2 - 2, 0, Math.PI * 2);
-    context.fillStyle = '#FFFFFF';
+    context.fillStyle = "#FFFFFF";
     context.fill();
 
     // Center colored circle
     context.beginPath();
     context.arc(centerX, size / 2, centerSize / 2, 0, Math.PI * 2);
-    context.fillStyle = isSelected ? '#ff0000' : point.color || '#000000';
+    context.fillStyle = isSelected ? "#ff0000" : point.color || "#000000";
     context.fill();
 
     // Draw text
-    context.fillStyle = '#000000';
+    context.fillStyle = "#000000";
     context.font = `bold ${fontSize}px Arial`;
-    context.textAlign = 'center';
-    context.textBaseline = 'top';
+    context.textAlign = "center";
+    context.textBaseline = "top";
     context.fillText(point.arabicName, totalWidth / 2, size + padding);
 
     return {
@@ -220,8 +220,8 @@ const CustomMap = () => {
     setPath([]);
   }, []);
 
-  if (loadError) return 'Error loading maps';
-  if (!isLoaded) return 'Loading Maps';
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading Maps";
 
   return (
     <div className="w-screen h-screen">
@@ -252,7 +252,7 @@ const CustomMap = () => {
       <GoogleMap
         mapContainerStyle={{
           ...mapContainerStyle,
-          position: 'relative',
+          position: "relative",
         }}
         zoom={currentZoom}
         center={center}
@@ -327,7 +327,7 @@ const CustomMap = () => {
         <Polyline
           path={path}
           options={{
-            strokeColor: '#fff',
+            strokeColor: "#fff",
             strokeWeight: 4,
             zIndex: 998,
           }}
