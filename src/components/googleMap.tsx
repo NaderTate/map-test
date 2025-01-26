@@ -19,6 +19,7 @@ import {
   zoom,
   restriction,
   center,
+  minZoom,
 } from "../data/map-config";
 import { Button } from "./ui/button";
 
@@ -281,7 +282,7 @@ const CustomMap = () => {
         zoom={currentZoom}
         center={currentCenter}
         options={{
-          minZoom: 13,
+          minZoom,
           // maxZoom: 13,
           // gestureHandling: "cooperative",
           styles: customMapStyle,
@@ -354,8 +355,8 @@ const CustomMap = () => {
         <Polyline
           path={path}
           options={{
-            strokeColor: "#1bd64a",
-            strokeWeight: 4,
+            strokeColor: "#0F53FF",
+            strokeWeight: 10,
             zIndex: 998,
           }}
         />

@@ -11,13 +11,14 @@ export const center = {
 export const restriction = {
   latLngBounds: {
     north: 25,
-    south: 24.5,
-    west: 46.5,
-    east: 47,
+    south: 24.3,
+    west: 46.3,
+    east: 47.1,
   },
 };
 
-export const zoom = 13;
+export const zoom = 12;
+export const minZoom = 12;
 
 export const customMapStyle = [
   {
