@@ -10,6 +10,7 @@ import ReactDOMServer from "react-dom/server";
 import ProjectCard from "./project-card";
 import LocationCard from "./location-card";
 import MapMarker from "./map-marker";
+import { LocateIcon } from "lucide-react";
 
 import { projects } from "../data/locations";
 import {
@@ -19,12 +20,14 @@ import {
   restriction,
   center,
 } from "../data/map-config";
+import { Button } from "./ui/button";
 
 const CustomMap = () => {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [selectedLocation, setSelectedLocation] =
     useState<LocationPoint | null>(null);
   const animationRef = useRef<number>();
+  const [currentCenter, setCurrentCenter] = useState(center);
   const [path, setPath] = useState<PathPoint[]>([]);
   const [currentZoom, setCurrentZoom] = useState(zoom);
   const [showAllProjects, setShowAllProjects] = useState(true);
@@ -34,6 +37,15 @@ const CustomMap = () => {
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
   }, []);
+
+  const resetCenter = () => {
+    if (mapRef.current) {
+      mapRef.current.panTo(center);
+      mapRef.current.setZoom(zoom);
+      setCurrentZoom(zoom);
+      setCurrentCenter(center);
+    }
+  };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -226,29 +238,40 @@ const CustomMap = () => {
 
   return (
     <div className="w-screen h-screen">
-      {!showAllProjects && (
-        <button
-          onClick={handleBackClick}
-          className="fixed top-4 left-4 z-20 px-4 py-2 bg-white/90 hover:bg-white 
+      <div className="flex items-center gap-x-3 fixed top-4 left-4 z-20">
+        {!showAllProjects && (
+          <button
+            onClick={handleBackClick}
+            className=" px-4 py-2 bg-white/90 hover:bg-white 
             text-black rounded-lg shadow-lg flex items-center gap-2 transition-all"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-5 h-5"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            />
-          </svg>
-          العودة الي المشاريع
-        </button>
-      )}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+              />
+            </svg>
+            العودة الي المشاريع
+          </button>
+        )}
+        <Button
+          onClick={() => {
+            handleBackClick();
+            resetCenter();
+          }}
+          className="bg-white/90 hover:bg-white text-black rounded-lg shadow-lg"
+        >
+          <LocateIcon />
+        </Button>
+      </div>
 
       <GoogleMap
         mapContainerStyle={{
@@ -256,7 +279,7 @@ const CustomMap = () => {
           position: "relative",
         }}
         zoom={currentZoom}
-        center={center}
+        center={currentCenter}
         options={{
           minZoom: 13,
           // maxZoom: 13,
