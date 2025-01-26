@@ -353,7 +353,7 @@ const CustomMap = () => {
           path={path}
           options={{
             strokeColor: "#AE8557",
-            strokeWeight: 10,
+            strokeWeight: 8,
             zIndex: 998,
           }}
         />
