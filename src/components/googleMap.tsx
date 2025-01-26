@@ -280,6 +280,7 @@ const CustomMap = () => {
         center={currentCenter}
         options={{
           minZoom,
+          maxZoom: 14,
           // maxZoom: 13,
           // gestureHandling: "cooperative",
           styles: customMapStyle,
