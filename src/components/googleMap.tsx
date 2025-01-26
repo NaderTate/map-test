@@ -352,7 +352,7 @@ const CustomMap = () => {
         <Polyline
           path={path}
           options={{
-            strokeColor: "#0F53FF",
+            strokeColor: "#AE8557",
             strokeWeight: 10,
             zIndex: 998,
           }}
