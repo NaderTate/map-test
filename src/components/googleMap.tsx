@@ -235,7 +235,7 @@ const CustomMap = () => {
   }, []);
 
   if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading Maps";
+  if (!isLoaded) return null;
 
   return (
     <div className="w-screen h-screen">
