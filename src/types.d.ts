@@ -44,6 +44,7 @@ interface Project {
   arabicName: string;
   color?: string;
   locations: LocationPoint[];
+  zoomLevel?: number;
   imageUrl?: string;
   units?: number;
   buildings?: number;

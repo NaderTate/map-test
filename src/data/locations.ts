@@ -124,6 +124,7 @@ export const projects: Project[] = [
     name: "Al Nuzha 80",
     arabicName: "النزهة 80",
     imageUrl: imageBaseUrl("80.png"),
+    zoomLevel: 14,
     units: 24,
     locations: [
       locationCoordinates.kingKhalidAirport,
@@ -166,6 +167,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("84.jpg"),
     lat: 24.7919008,
     lng: 46.6900424,
+    zoomLevel: 12,
     units: 6,
     locations: [
       locationCoordinates.kingKhalidAirport,
@@ -193,6 +195,7 @@ export const projects: Project[] = [
     arabicName: "الملك فيصل 90",
     imageUrl: imageBaseUrl("90.jpg"),
     lat: 24.762995250281943,
+    zoomLevel: 12,
     lng: 46.781964096295326,
     units: 8,
     locations: [
@@ -220,6 +223,7 @@ export const projects: Project[] = [
     name: "Al Aqiq 98",
     arabicName: "العقيق 98",
     imageUrl: imageBaseUrl("98.png"),
+    zoomLevel: 11,
     lat: 24.79079928278308,
     lng: 46.63003067116396,
     locations: [
@@ -232,6 +236,7 @@ export const projects: Project[] = [
   {
     id: "alaqiq100",
     name: "Al Aqiq 100",
+    zoomLevel: 12,
     arabicName: "العقيق 100",
     imageUrl: imageBaseUrl("100.png"),
     lat: 24.788939810397,
@@ -292,6 +297,7 @@ export const projects: Project[] = [
     id: "alrawdah106",
     name: "Al Rawdah 106",
     arabicName: "الروضة 106",
+    zoomLevel: 12,
     imageUrl: imageBaseUrl("106.jpg"),
     lat: 24.74542513587728,
     lng: 46.775053245369165,
@@ -306,6 +312,7 @@ export const projects: Project[] = [
     id: "almalaz108",
     name: "Al Malaz 108",
     arabicName: "الملز 108",
+    zoomLevel: 12,
     imageUrl: imageBaseUrl("108.png"),
     lat: 24.661381422862743,
     lng: 46.730186640337685,
@@ -318,6 +325,7 @@ export const projects: Project[] = [
   {
     id: "alfalah112",
     name: "Al Falah 112",
+    zoomLevel: 12,
     arabicName: "الفلاح 112",
     imageUrl: imageBaseUrl("112.jpeg"),
     lat: 24.795384937384377,
@@ -333,6 +341,7 @@ export const projects: Project[] = [
   {
     id: "almanar116",
     name: "Al Manar 116",
+    zoomLevel: 12,
     arabicName: "المنار 116",
     imageUrl: imageBaseUrl("116.jpeg"),
     lat: 24.73183107703207,
@@ -386,6 +395,7 @@ export const projects: Project[] = [
     id: "almursalat124",
     name: "Al Mursalat 124",
     arabicName: "المرسلات 124",
+    zoomLevel: 12,
     imageUrl: imageBaseUrl("124.png"),
     lat: 24.750296330694116,
     lng: 46.69618445369093,
@@ -399,6 +409,7 @@ export const projects: Project[] = [
     id: "alrawabi128",
     name: "Al Rawabi 128",
     arabicName: "الروابي 128",
+    zoomLevel: 11,
     imageUrl: imageBaseUrl("128.jpg"),
     lat: 24.697378188109003,
     lng: 46.80562623599567,
@@ -415,6 +426,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("136.jpg"),
     lat: 24.692081265771705,
     lng: 46.75097879999999,
+    zoomLevel: 11,
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,

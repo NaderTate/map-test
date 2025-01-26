@@ -59,8 +59,8 @@ const CustomMap = () => {
       setShowAllProjects(false);
       if (mapRef.current) {
         mapRef.current.panTo({ lat: point.lat, lng: point.lng });
-        mapRef.current.setZoom(15);
-        setCurrentZoom(15);
+        mapRef.current.setZoom(point.zoomLevel || 13);
+        setCurrentZoom(point.zoomLevel || 13);
       }
     } else if (activeProject) {
       fetchDirections(activeProject, point);
@@ -264,10 +264,7 @@ const CustomMap = () => {
           </button>
         )}
         <Button
-          onClick={() => {
-            handleBackClick();
-            resetCenter();
-          }}
+          onClick={resetCenter}
           className="bg-white/90 hover:bg-white text-black rounded-lg shadow-lg"
         >
           <LocateIcon />
