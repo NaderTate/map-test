@@ -118,6 +118,7 @@ export const imageBaseUrl = (name: string) =>
 
 export const projects: Project[] = [
   {
+    _id: "6676b7b2342c23b971ecd409",
     id: "alNuzha80",
     lat: 24.761655878578935,
     lng: 46.7087903846558,
@@ -133,6 +134,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "664b395162ebab6452c3f0c7",
     id: "alMurooj78",
     name: "Al Murooj 78",
     arabicName: "المروج 78",
@@ -147,6 +149,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "66f57eb86108a391c3249415",
     id: "alezdihar74",
     name: "Al Ezdihar 74",
     arabicName: "الازدهار 74",
@@ -161,6 +164,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "663b91f96b67c871b263d9a9",
     id: "alwadi84",
     name: "Al Wadi 84",
     arabicName: "الوادي 84",
@@ -176,6 +180,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "663cba046b67c871b263dcaf",
     id: "alezdihar88",
     name: "Al Ezdihar 88",
     arabicName: "الازدهار 88",
@@ -190,6 +195,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "667afa43342c23b971ecff8f",
     id: "kingFeisal90",
     name: "King Feisal 90",
     arabicName: "الملك فيصل 90",
@@ -205,6 +211,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "66f57eb86108a391c3249417",
     id: "almgharzat96",
     name: "Al Mgharzat 96",
     arabicName: "المغرزات 96",
@@ -219,6 +226,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "663cbb656b67c871b263dccf",
     id: "alaqiq98",
     name: "Al Aqiq 98",
     arabicName: "العقيق 98",
@@ -234,6 +242,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "66f57eb86108a391c3249418",
     id: "alaqiq100",
     name: "Al Aqiq 100",
     zoomLevel: 12,
@@ -250,6 +259,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "66f57eb86108a391c3249419",
     id: "alaqiq102",
     name: "Al Aqiq 102",
     arabicName: "العقيق 102",
@@ -265,6 +275,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67877baacc6788d010b7034d",
     id: "alaqiq114",
     name: "Al Aqiq 114",
     arabicName: "العقيق 114",
@@ -279,6 +290,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "668a65a7b0ccca6fac66a513",
     id: "almgharzat104",
     name: "Al Mgharzat 104",
     arabicName: "المغرزات 104",
@@ -292,6 +304,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "663cba8a6b67c871b263dcbf",
     id: "alrawdah106",
     name: "Al Rawdah 106",
     arabicName: "الروضة 106",
@@ -307,6 +320,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67920d3df926ffd1609f1984",
     id: "almalaz108",
     name: "Al Malaz 108",
     arabicName: "الملز 108",
@@ -321,6 +335,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "675031d1108b71300ec3a151",
     id: "alfalah112",
     name: "Al Falah 112",
     zoomLevel: 12,
@@ -337,6 +352,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "679210eef926ffd1609f1d39",
     id: "almanar116",
     name: "Al Manar 116",
     zoomLevel: 12,
@@ -351,6 +367,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67921146f926ffd1609f1d47",
     id: "almohammadiya118",
     name: "Al Mohammadiya 118",
     arabicName: "المحمدية 118",
@@ -364,6 +381,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67921239f926ffd1609f1d5d",
     id: "almohammadiya120",
     name: "Al Mohammadiya 120",
     arabicName: "المحمدية 120",
@@ -377,6 +395,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67921304f926ffd1609f1db6",
     id: "algadeer122",
     name: "Al Gadeer 122",
     arabicName: "الغدير 122",
@@ -390,6 +409,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67921389f926ffd1609f1e14",
     id: "almursalat124",
     name: "Al Mursalat 124",
     arabicName: "المرسلات 124",
@@ -404,6 +424,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "67921403f926ffd1609f1e2e",
     id: "alrawabi128",
     name: "Al Rawabi 128",
     arabicName: "الروابي 128",
@@ -418,6 +439,7 @@ export const projects: Project[] = [
     ],
   },
   {
+    _id: "679214d6f926ffd1609f1e84",
     id: "alrabwah136",
     name: "Al Rabwah 136",
     arabicName: "الربوة 136",
