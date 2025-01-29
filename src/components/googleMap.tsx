@@ -282,7 +282,7 @@ const CustomMap = () => {
           minZoom,
           maxZoom: 14,
           // maxZoom: 13,
-          // gestureHandling: "cooperative",
+          gestureHandling: "greedy",
           styles: customMapStyle,
           restriction,
           disableDefaultUI: true,
