@@ -49,7 +49,7 @@ interface Project {
   imageUrl?: string;
   units?: number;
   buildings?: number;
-  status: PorjectStatus;
+  status?: PorjectStatus;
 }
 
 interface LocationPoint {

@@ -125,7 +125,7 @@ export const projects: Project[] = [
     arabicName: "النزهة 80",
     imageUrl: imageBaseUrl("80.png"),
     zoomLevel: 14,
-    units: 24,
+    units: 21,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.nakhilMall,
@@ -139,7 +139,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("78.jpg"),
     lat: 24.761766022976122,
     lng: 46.65769974019941,
-    units: 13,
+    units: 10,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -153,7 +153,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("74.jpg"),
     lat: 24.775892021296617,
     lng: 46.722553138347585,
-    units: 9,
+    units: 4,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -168,7 +168,7 @@ export const projects: Project[] = [
     lat: 24.7919008,
     lng: 46.6900424,
     zoomLevel: 12,
-    units: 6,
+    units: 4,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.kingSaudUniversity,
@@ -182,7 +182,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("88.jpg"),
     lat: 24.77875936642475,
     lng: 46.72551887367969,
-    units: 12,
+    units: 9,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -197,7 +197,7 @@ export const projects: Project[] = [
     lat: 24.762995250281943,
     zoomLevel: 12,
     lng: 46.781964096295326,
-    units: 8,
+    units: 7,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -211,7 +211,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("96.png"),
     lat: 24.769634002922153,
     lng: 46.72298295767209,
-    units: 17,
+    units: 7,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -241,7 +241,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("100.png"),
     lat: 24.788939810397,
     lng: 46.625991988360475,
-    units: 6,
+    units: 4,
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -256,7 +256,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("102.png"),
     lat: 24.772140756601466,
     lng: 46.6322626846558,
-    units: 17,
+    units: 12,
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -271,7 +271,6 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("114.png"),
     lat: 24.769300939136546,
     lng: 46.62702796871715,
-    units: 3,
     locations: [
       locationCoordinates.kingAbdullahFinancialDistrict,
       locationCoordinates.kingSaudUniversity,
@@ -286,7 +285,6 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("104.jpg"),
     lat: 24.765096158557963,
     lng: 46.73185766441802,
-    units: 17,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -301,7 +299,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("106.jpg"),
     lat: 24.74542513587728,
     lng: 46.775053245369165,
-    units: 6,
+    units: 5,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
@@ -330,7 +328,7 @@ export const projects: Project[] = [
     imageUrl: imageBaseUrl("112.jpeg"),
     lat: 24.795384937384377,
     lng: 46.7035618423279,
-    units: 2,
+    units: 21,
     locations: [
       locationCoordinates.kingKhalidAirport,
       locationCoordinates.imamMuhammadIbnSaudIslamicUniversity,
