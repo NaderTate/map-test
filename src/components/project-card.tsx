@@ -149,9 +149,11 @@ const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
 
           {unitsData && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {unitsData?.units?.map((unit: Unit_) => (
-                <UnitCard key={unit._id} unit={unit} />
-              ))}
+              {unitsData?.units
+                ?.filter((unit: Unit_) => unit.status === "vacant")
+                .map((unit: Unit_) => (
+                  <UnitCard key={unit._id} unit={unit} />
+                ))}
             </div>
           )}
         </DialogContent>
