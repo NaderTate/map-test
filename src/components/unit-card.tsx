@@ -4,12 +4,12 @@ import { Card, CardContent, CardTitle, CardHeader } from "./ui/card";
 
 import { BedDouble, Bath, Square, Building } from "lucide-react";
 
-type Props = { unit: Unit_ };
+type Props = { unit: Unit_; onClick?: () => void };
 
-const UnitCard = ({ unit }: Props) => {
+const UnitCard = ({ unit, onClick }: Props) => {
   const getStatusColor = (status: UnitStatus): string => {
     return status === "vacant"
-      ? "bg-green-100 text-green-800"
+      ? "bg-green-100 hover:bg-green-100 text-green-800"
       : "bg-red-100 text-red-800";
   };
 
@@ -37,7 +37,10 @@ const UnitCard = ({ unit }: Props) => {
   return (
     <Card
       key={unit._id}
-      className="overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      onClick={onClick}
+      className={`overflow-hidden hover:shadow-lg transition-transform duration-300  ${
+        onClick && "cursor-pointer hover:scale-105"
+      }`}
     >
       <CardHeader className="bg-gray-50">
         <div className="flex justify-between items-center">
@@ -85,10 +88,10 @@ const UnitCard = ({ unit }: Props) => {
           {unit.status === "vacant" && (
             <div className="mt-4 pt-4 border-t">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium">السعر</span>
                 <span className="text-lg font-bold text-green-600">
                   {formatPrice(unit.price)}
                 </span>
+                <span className="text-sm font-medium">السعر</span>
               </div>
             </div>
           )}

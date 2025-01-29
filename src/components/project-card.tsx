@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import UnitCard from "./unit-card";
+import UnitsPopup from "./units-popup";
 
 interface ProjectCardProps {
   project: Project;
@@ -147,15 +147,7 @@ const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
             </div>
           )}
 
-          {unitsData && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {unitsData?.units
-                ?.filter((unit: Unit_) => unit.status === "vacant")
-                .map((unit: Unit_) => (
-                  <UnitCard key={unit._id} unit={unit} />
-                ))}
-            </div>
-          )}
+          {unitsData && <UnitsPopup unitsData={unitsData} />}
         </DialogContent>
       </Dialog>
     </>
