@@ -361,7 +361,10 @@ const CustomMap = () => {
       </GoogleMap>
 
       {activeProject && !selectedLocation && (
-        <ProjectCard project={activeProject} />
+        <ProjectCard
+          handleLocationClick={handleLocationClick}
+          project={activeProject}
+        />
       )}
 
       {selectedLocation && <LocationCard location={selectedLocation} />}

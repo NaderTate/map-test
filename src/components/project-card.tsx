@@ -1,8 +1,9 @@
 interface ProjectCardProps {
   project: Project;
+  handleLocationClick: (point: LocationPoint | Project) => void;
 }
 
-const ProjectCard = ({ project }: ProjectCardProps) => {
+const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
   return (
     <div
       className="fixed bottom-4 left-4 w-80 h-60 rounded-lg overflow-hidden z-20"
@@ -50,8 +51,10 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         <div className="flex flex-wrap gap-2">
           {project.locations.map((location) => (
             <div
+              onClick={() => handleLocationClick(location)}
+              tabIndex={0}
               key={location.id}
-              className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-xs"
+              className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-xs cursor-pointer"
             >
               <div
                 className="w-2 h-2 rounded-full"

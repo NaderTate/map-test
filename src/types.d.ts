@@ -36,6 +36,7 @@ interface DirectionsResult {
 
 type PathPoint = google.maps.LatLngLiteral;
 
+type PorjectStatus = "sold" | "forSale" | "underConstruction";
 interface Project {
   id: string;
   lat: number;
@@ -48,6 +49,7 @@ interface Project {
   imageUrl?: string;
   units?: number;
   buildings?: number;
+  status: PorjectStatus;
 }
 
 interface LocationPoint {
