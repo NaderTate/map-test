@@ -20,6 +20,8 @@ import {
   restriction,
   center,
   minZoom,
+  maxZoom,
+  mobileMinZoom,
 } from "../data/map-config";
 import { Button } from "./ui/button";
 
@@ -279,8 +281,8 @@ const CustomMap = () => {
         zoom={currentZoom}
         center={currentCenter}
         options={{
-          minZoom,
-          maxZoom: 14,
+          minZoom: window.innerWidth < 768 ? mobileMinZoom : minZoom,
+          maxZoom,
           // maxZoom: 13,
           gestureHandling: "greedy",
           styles: customMapStyle,

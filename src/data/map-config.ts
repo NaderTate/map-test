@@ -19,6 +19,8 @@ export const restriction = {
 
 export const zoom = 12;
 export const minZoom = 12;
+export const maxZoom = 14;
+export const mobileMinZoom = 11;
 
 export const customMapStyle = [
   {
