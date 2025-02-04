@@ -55,8 +55,8 @@ const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
             <h3 className="text-xl font-bold mb-2">{project.arabicName}</h3>
 
             <div className="flex flex-col gap-4">
-              {/* Stats */}
-              <div className="grid grid-cols-3 items-center gap-4">
+              {/* Stats - Modified container */}
+              <div className="grid grid-cols-3 items-center gap-4 md:absolute md:-bottom-44 md:left-0 md:right-0 md:px-4 md:pb-4">
                 <div className="text-center">
                   <span className="block text-lg font-bold">
                     {project.locations.length}
@@ -78,7 +78,7 @@ const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
                 )}
               </div>
 
-              {/* Mobile Locations - Inside card */}
+              {/* Mobile Locations - Inside card (unchanged) */}
               <div className="flex flex-wrap gap-2 md:hidden">
                 {project.locations.map((location) => (
                   <div
