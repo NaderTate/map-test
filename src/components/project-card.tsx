@@ -128,7 +128,7 @@ const ProjectCard = ({ project, handleLocationClick }: ProjectCardProps) => {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-3xl max-w-[90vw] max-h-[80vh] overflow-y-auto rounded-lg">
+        <DialogContent className="sm:max-w-4xl max-w-[90vw] max-h-[80vh] overflow-y-auto rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-right mb-4 mr-3">
               {project.arabicName} - تفاصيل الوحدات

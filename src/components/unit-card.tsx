@@ -114,6 +114,28 @@ const UnitCard = ({ unit, onClick }: Props) => {
                 <Square className="w-5 h-5 text-gray-500" />{" "}
               </div>{" "}
             </div>{" "}
+            {unit?.outdoorPatio && (
+              <>
+                <div className="flex items-center justify-between">
+                  {" "}
+                  <span className="font-medium whitespace-nowrap">
+                    <div className="flex">
+                      {" "}
+                      {unit?.outdoorPatio} <span>م²</span>
+                    </div>
+                  </span>{" "}
+                  <div className="flex items-center gap-2">
+                    {" "}
+                    <span className="text-sm whitespace-nowrap">
+                      {" "}
+                      مساحة الفناء الخارجي{" "}
+                    </span>
+                    {"  "}
+                    <Square className="w-5 h-5 text-gray-500 flex-shrink-0" />{" "}
+                  </div>{" "}
+                </div>{" "}
+              </>
+            )}
             <div className="flex items-center justify-between">
               {" "}
               <span className="font-medium">{unit.bedrooms}</span>{" "}

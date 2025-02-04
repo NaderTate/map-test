@@ -31,6 +31,7 @@ interface Unit_ {
   updatedAt?: string;
   __v?: number;
   images?: string[];
+  outdoorPatio?:numnber
   hasDiningRoom?: boolean;
   hasDriverRoom?: boolean;
   hasElevator?: boolean;

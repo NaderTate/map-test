@@ -81,6 +81,7 @@ const UnitsPopup = ({ unitsData }: Props) => {
     setIsSubmitting(true);
     try {
       const response = await fetch(
+        // "https://aleen-server.inbots.ai/api/sales/cycles",
         "https://aleen-server.wessal.app/api/sales/cycles",
         {
           method: "POST",
@@ -93,7 +94,8 @@ const UnitsPopup = ({ unitsData }: Props) => {
               phone: formData.phone,
               gender: formData.gender,
             },
-            unitId: selectedUnit?._id,
+            unit: selectedUnit?._id,
+            src: "معرض Restatex",
           }),
         }
       );
