@@ -6,6 +6,24 @@ import { BedDouble, Bath, Square, Building } from "lucide-react";
 
 type Props = { unit: Unit_; onClick?: () => void };
 
+const InfoField = ({
+  value,
+  label,
+  icon,
+}: {
+  value: React.ReactNode;
+  label: string;
+  icon: React.ReactNode;
+}) => (
+  <div className="flex w-full items-center justify-between gap-x-2">
+    <span className="font-medium whitespace-nowrap">{value}</span>
+    <div className="flex items-center gap-2">
+      <span className="text-sm">{label}</span>
+      {icon}
+    </div>
+  </div>
+);
+
 const UnitCard = ({ unit, onClick }: Props) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const dummyImage =
@@ -13,6 +31,7 @@ const UnitCard = ({ unit, onClick }: Props) => {
 
   const images =
     !unit?.images || unit?.images.length == 0 ? [dummyImage] : unit.images;
+
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -95,91 +114,60 @@ const UnitCard = ({ unit, onClick }: Props) => {
       </CardHeader>
 
       <CardContent className="pt-6">
-        <CardContent className="pt-6">
-          {" "}
-          <div className="space-y-4">
-            {" "}
-            <div className="flex items-center justify-between">
-              {" "}
-              <span className="font-medium whitespace-nowrap">
-                <div className="flex">
-                  {" "}
-                  {unit.area} <span>م²</span>
-                </div>
-              </span>{" "}
-              <div className="flex items-center gap-2">
-                {" "}
-                <span className="text-sm"> المساحة </span>
-                {"  "}
-                <Square className="w-5 h-5 text-gray-500" />{" "}
-              </div>{" "}
-            </div>{" "}
-            {unit?.outdoorPatio && (
-              <>
-                <div className="flex items-center justify-between">
-                  {" "}
-                  <span className="font-medium whitespace-nowrap">
-                    <div className="flex">
-                      {" "}
-                      {unit?.outdoorPatio} <span>م²</span>
-                    </div>
-                  </span>{" "}
-                  <div className="flex items-center gap-2">
-                    {" "}
-                    <span className="text-sm whitespace-nowrap">
-                      {" "}
-                      مساحة الفناء الخارجي{" "}
-                    </span>
-                    {"  "}
-                    <Square className="w-5 h-5 text-gray-500 flex-shrink-0" />{" "}
-                  </div>{" "}
-                </div>{" "}
-              </>
-            )}
-            <div className="flex items-center justify-between">
-              {" "}
-              <span className="font-medium">{unit.bedrooms}</span>{" "}
-              <div className="flex items-center gap-2">
-                {" "}
-                <span className="text-sm">غرف النوم</span>{" "}
-                <BedDouble className="w-5 h-5 text-gray-500" />{" "}
-              </div>{" "}
-            </div>{" "}
-            <div className="flex items-center justify-between">
-              {" "}
-              <span className="font-medium">{unit.bathrooms}</span>{" "}
-              <div className="flex items-center gap-2">
-                {" "}
-                <span className="text-sm">الحمامات</span>{" "}
-                <Bath className="w-5 h-5 text-gray-500" />{" "}
-              </div>{" "}
-            </div>{" "}
-            <div className="flex items-center justify-between">
-              {" "}
-              <span className="font-medium">
-                {getFloorLabel(unit.floor)}
-              </span>{" "}
-              <div className="flex items-center gap-2">
-                {" "}
-                <span className="text-sm">الطابق</span>{" "}
-                <Building className="w-5 h-5 text-gray-500" />{" "}
-              </div>{" "}
-            </div>{" "}
-            {unit.status === "vacant" && (
-              <div className="mt-4 pt-4 border-t">
-                {" "}
-                <div className="flex justify-between items-center">
-                  {" "}
-                  <span className="text-lg font-bold text-green-600">
-                    {" "}
-                    {formatPrice(unit.price)}{" "}
-                  </span>{" "}
-                  <span className="text-sm font-medium">السعر</span>{" "}
-                </div>{" "}
+        <div className="flex flex-col items-end gap-y-4">
+          <InfoField
+            value={
+              <div className="flex">
+                {unit.area}
+                <span>م²</span>
               </div>
-            )}{" "}
-          </div>{" "}
-        </CardContent>
+            }
+            label="المساحة"
+            icon={<Square className="w-5 h-5 text-gray-500" />}
+          />
+
+          {unit?.outdoorPatio && (
+            <InfoField
+              value={
+                <div className="flex">
+                  {unit.outdoorPatio}
+                  <span>م²</span>
+                </div>
+              }
+              label="مساحة الفناء الخارجي"
+              icon={<Square className="w-5 h-5 text-gray-500 flex-shrink-0" />}
+            />
+          )}
+
+          <InfoField
+            value={unit.bedrooms}
+            label="غرف النوم"
+            icon={<BedDouble className="w-5 h-5 text-gray-500" />}
+          />
+
+          <InfoField
+            value={unit.bathrooms}
+            label="الحمامات"
+            icon={<Bath className="w-5 h-5 text-gray-500" />}
+          />
+
+          <InfoField
+            value={getFloorLabel(unit.floor)}
+            label="الطابق"
+            icon={<Building className="w-5 h-5 text-gray-500" />}
+          />
+
+          {unit.status === "vacant" && (
+            <div className="mt-4 pt-4 border-t w-full">
+              <div className="flex justify-between gap-x-2 items-center">
+                <span className="text-lg font-bold text-green-600">
+                  {formatPrice(unit.price)}
+                </span>
+                <span className="text-sm font-medium">السعر</span>
+              </div>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
