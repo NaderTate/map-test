@@ -83,6 +83,13 @@ const CustomMap = () => {
   };
 
   const fetchDirections = (origin: Project, destination: LocationPoint) => {
+    // Clear any existing animation and path before starting a new one
+    if (animationRef.current) {
+      clearTimeout(animationRef.current);
+      animationRef.current = undefined;
+    }
+    setPath([]);
+
     const directionsService = new google.maps.DirectionsService();
     directionsService.route(
       {
@@ -117,16 +124,22 @@ const CustomMap = () => {
               : null
           );
 
-          animatePolyline(route);
+          // Only start new animation if we haven't started another one
+          if (!animationRef.current) {
+            animatePolyline(route);
+          }
         } else {
           console.error(`Error fetching directions ${status}`);
         }
       }
     );
   };
-
   const animatePolyline = (route: PathPoint[]) => {
-    setPath([]);
+    // Clear any existing timeout to prevent overlapping animations
+    if (animationRef.current) {
+      clearTimeout(animationRef.current);
+    }
+    setPath([]); // Reset the path
     let index = 0;
     const animationDuration = 200;
     const stepDuration = animationDuration / route.length;
@@ -135,9 +148,11 @@ const CustomMap = () => {
       if (index < route.length) {
         setPath((prevPath) => [...prevPath, route[index]]);
         index++;
-        animationRef.current = setTimeout(() => {
-          requestAnimationFrame(animate);
-        }, stepDuration) as unknown as number;
+        // Store the timeout ID to clear it later if needed
+        animationRef.current = setTimeout(
+          () => requestAnimationFrame(animate),
+          stepDuration
+        ) as unknown as number;
       }
     };
 
@@ -148,7 +163,6 @@ const CustomMap = () => {
     return () => {
       if (animationRef.current) {
         clearTimeout(animationRef.current);
-        cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);
@@ -231,7 +245,7 @@ const CustomMap = () => {
   const handleMapClick = useCallback(() => {
     setSelectedLocation(null);
     if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
+      clearTimeout(animationRef.current); // Correctly clear timeout
     }
     setPath([]);
   }, []);
